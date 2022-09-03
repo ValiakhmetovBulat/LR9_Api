@@ -29,6 +29,7 @@ namespace Api.Controllers
               return NotFound();
           }
             return await _context.Users.ToListAsync();
+            
         }
 
         // GET: api/Users/5
