@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Api.Models;
+using Api.ViewModels;
+using Api.Models.Sklad;
 
 namespace Api.Controllers
 {
@@ -32,39 +34,78 @@ namespace Api.Controllers
             return result;
         }
 
-        [Route("Sklad_rashod_date")]
-        // GET: api/Sklad_rashod/Sklad_rashod_date
-        // GET: api/Sklad_rashod/
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<Sklad_rashod>>> GetSklad_rashod_ByDate(DateTime? start, DateTime? end, string? search)
+        [Route("Filter")]
+        // Post: api/Sklad_rashod/Filter
+        [HttpPost]
+        public async Task<ActionResult<List<Sklad_rashod>>> GetSklad_rashodByFilter(RashodyQueryParams? queryParams)
         {
             if (_context.Sklad_rashod == null)
             {
                 return NotFound();
             }
-            var result = await _context.Sklad_rashod.Where(p => (start.HasValue ? p.data_rash >= start.Value : true) && (end.HasValue ? p.data_rash <= end.Value : true))
-                //.Include(p => p.Sklad_rashod_tov)
-                .Include(p => p.Sheta)
-                .Include(p => p.Spr_oplat_sklad)
-                .Include(p => p.Sklad_dostavki)
-                .ToListAsync();
-            if (search != null && search != "")
+
+            List<Sklad_rashod> _rashods = new List<Sklad_rashod>();
+            if (queryParams != null)
             {
-                result = result.Where(p => p.nom_rash.ToString() == search || p.shet.GetValueOrDefault().ToString() == search
-                                        || (p.first_phone != null ? p.first_phone.Contains(search) :false) 
-                                        || (p.name_kontact_person != null ? p.name_kontact_person.Contains(search)  : false)
-                                        || (p.name_pokup != null ? p.name_pokup.Contains(search) : false) 
-                                        || (p.otpustil != null ? p.otpustil.Contains(search) : false) 
-                                        || (p.phone_pokup.GetValueOrDefault().ToString().Contains(search))
-                                        || (p.prim != null ? p.prim.Contains(search) : false) 
-                                        || (p.primZavSklad != null ? p.primZavSklad.Contains(search) : false) 
-                                        || (p.prim_buh != null ? p.prim_buh.Contains(search) : false)
-                                        || (p.second_phone != null ? p.second_phone.Contains(search) : false)).ToList();
+                switch (queryParams.DateFilter)
+                {
+                    case 1:
+                        {
+                            _rashods = await _context.Sklad_rashod.
+                                Where(p => (queryParams.StartDate.HasValue ? p.data_rash >= queryParams.StartDate.Value : true)
+                                        && (queryParams.EndDate.HasValue ? p.data_rash <= queryParams.EndDate : true))
+                                .Include(p => p.Sheta).Include(p => p.Spr_oplat_sklad).Include(p => p.Sklad_dostavki).ToListAsync();
+                            break;
+                        }
+                    case 2:
+                        {
+                            _rashods = await _context.Sklad_rashod.
+                                Where(p => (queryParams.StartDate.HasValue ? p.data_otgruzki >= queryParams.StartDate.Value : true)
+                                        && (queryParams.EndDate.HasValue ? p.data_otgruzki <= queryParams.EndDate : true))
+                                .Include(p => p.Sheta).Include(p => p.Spr_oplat_sklad).Include(p => p.Sklad_dostavki).ToListAsync();
+                            break;
+                        }
+                    case 3:
+                        {
+                            _rashods = await _context.Sklad_rashod.
+                                Where(p => (queryParams.StartDate.HasValue ? p.data_opl >= queryParams.StartDate.Value : true)
+                                        && (queryParams.EndDate.HasValue ? p.data_opl <= queryParams.EndDate : true))
+                                .Include(p => p.Sheta).Include(p => p.Spr_oplat_sklad).Include(p => p.Sklad_dostavki).ToListAsync();
+                            break;
+                        }
+                }
+
+                if (queryParams.Search != null && queryParams.Search != "")
+                {
+                    _rashods = _rashods.Where(p => p.nom_rash.ToString() == queryParams.Search || p.shet.GetValueOrDefault().ToString() == queryParams.Search
+                                            || (p.first_phone != null ? p.first_phone.Contains(queryParams.Search) : false)
+                                            || (p.name_kontact_person != null ? p.name_kontact_person.Contains(queryParams.Search) : false)
+                                            || (p.name_pokup != null ? p.name_pokup.Contains(queryParams.Search) : false)
+                                            || (p.otpustil != null ? p.otpustil.Contains(queryParams.Search) : false)
+                                            || (p.phone_pokup.GetValueOrDefault().ToString().Contains(queryParams.Search))
+                                            || (p.prim != null ? p.prim.Contains(queryParams.Search) : false)
+                                            || (p.primZavSklad != null ? p.primZavSklad.Contains(queryParams.Search) : false)
+                                            || (p.prim_buh != null ? p.prim_buh.Contains(queryParams.Search) : false)
+                                            || (p.second_phone != null ? p.second_phone.Contains(queryParams.Search) : false)).ToList();
+                }
             }
-            return result;
+            else _rashods = await _context.Sklad_rashod.ToListAsync();
+            
+            return _rashods;
         }
 
+        [Route("VM")]
+        // Get: api/Sklad_rashod/VM
+        [HttpGet]
+        public async Task<ActionResult<RashodyViewModel>> GetSklad_rashodVM()
+        {
+            if (_context.Sklad_rashod == null)
+            {
+                return NotFound();
+            }
 
+            return await new RashodyViewModel().GetVM(_context);
+        }
 
         [Route("Sklad_rashod")]
         // GET: api/Sklad_rashod/Sklad_rashod?year=2022&month=3
