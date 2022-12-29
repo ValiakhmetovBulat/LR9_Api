@@ -12,7 +12,7 @@ namespace Api.Models
             //this.Sklad_rashod = new HashSet<Sklad_rashod>();
         }
         [Key]
-        public decimal kod_zap { get; set; }
+        public int kod_zap { get; set; }
         public Nullable<decimal> nom_1C { get; set; }
         public Nullable<System.DateTime> data { get; set; }
         public Nullable<decimal> org { get; set; }
