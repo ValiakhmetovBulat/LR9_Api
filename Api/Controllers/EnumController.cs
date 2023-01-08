@@ -1,11 +1,14 @@
 ﻿using Api.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
+using System.Security.Claims;
 
 namespace Api.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class EnumController : ControllerBase
@@ -26,6 +29,7 @@ namespace Api.Controllers
             {
                 return NotFound();
             }
+            //_context.users.FindFirst(ClaimTypes.NameIdentifier).Value;
             return await _context.spr_oplat_sklad.ToListAsync();
         }
 

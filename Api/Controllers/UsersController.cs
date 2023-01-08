@@ -6,6 +6,10 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Api.Models;
+using System.Security.Claims;
+using System.IdentityModel.Tokens.Jwt;
+using Microsoft.IdentityModel.Tokens;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Api.Controllers
 {
@@ -20,26 +24,28 @@ namespace Api.Controllers
             _context = context;
         }
 
+        [Authorize]
         // GET: api/Users
         [HttpGet]
         public async Task<ActionResult<List<User>>> GetUsers()
         {
-          if (_context.users == null)
-          {
-              return NotFound();
-          }
+            if (_context.users == null)
+            {
+                return NotFound();
+            }
             return await _context.users.ToListAsync();
-            
+
         }
 
+        [Authorize]
         // GET: api/Users/5
         [HttpGet("{id}")]
         public async Task<ActionResult<User>> GetUser(int id)
         {
-          if (_context.users == null)
-          {
-              return NotFound();
-          }
+            if (_context.users == null)
+            {
+                return NotFound();
+            }
             var user = await _context.users.FindAsync(id);
 
             if (user == null)
@@ -50,6 +56,29 @@ namespace Api.Controllers
             return user;
         }
 
+        [Route("Token")]
+        [HttpGet]
+        public async Task<ActionResult<string>> GetToken(string username, string password)
+        {
+            User user = _context.users.Where(p => p.Login == username).FirstOrDefault();
+            if (user != null)
+            {
+                if (user.Password != password) return Unauthorized();
+                var claims = new List<Claim> { new Claim(ClaimTypes.Name, username) };
+                // создаем JWT-токен
+                var jwt = new JwtSecurityToken(
+                        issuer: AuthOptions.ISSUER,
+                        audience: AuthOptions.AUDIENCE,
+                        claims: claims,
+                        expires: DateTime.UtcNow.Add(TimeSpan.FromMinutes(120)),
+                        signingCredentials: new SigningCredentials(AuthOptions.GetSymmetricSecurityKey(), SecurityAlgorithms.HmacSha256));
+
+                return new JwtSecurityTokenHandler().WriteToken(jwt);
+            }
+            return NotFound();
+        }
+
+        [Authorize]
         // PUT: api/Users/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
@@ -81,6 +110,7 @@ namespace Api.Controllers
             return NoContent();
         }
 
+        [Authorize]
         // POST: api/Users
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
@@ -96,6 +126,7 @@ namespace Api.Controllers
             return CreatedAtAction("GetUser", new { id = user.Id }, user);
         }
 
+        [Authorize]
         // DELETE: api/Users/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteUser(int id)

@@ -6,6 +6,7 @@ using System.Text;
 using System.Security.Claims;
 using System.IdentityModel.Tokens.Jwt;
 using System.Configuration;
+using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -24,6 +25,36 @@ builder.Services.AddDbContext<ApiContext>(options => options.UseNpgsql(connectio
 AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 
 builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(swagger =>
+{
+    //This is to generate the Default UI of Swagger Documentation
+    swagger.SwaggerDoc("v1", new OpenApiInfo
+    {
+        Version = "v1",
+        Title = "ASP.NET 5 Web API",
+        Description = "Authentication and Authorization in ASP.NET 5 with JWT and Swagger" });
+    // To Enable authorization using Swagger (JWT)
+    swagger.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme()
+    {
+        Name = "Authorization",
+        Type = SecuritySchemeType.ApiKey,
+        Scheme = "Bearer",
+        BearerFormat = "JWT",
+        In = ParameterLocation.Header,
+        Description = "Enter ‘Bearer’ [space] and then your valid token in the text input below.\r\n\r\nExample: \"Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9\"", });
+    swagger.AddSecurityRequirement(new OpenApiSecurityRequirement{ {
+            new OpenApiSecurityScheme {
+            Reference = new OpenApiReference
+                {
+                Type = ReferenceType.SecurityScheme,
+                Id = "Bearer"
+                }
+            },
+            new string[] {}
+
+        }
+});
+});
 
 builder.Services.AddAuthentication("Bearer").AddJwtBearer(
     options =>
@@ -63,9 +94,14 @@ app.UseStaticFiles();
 
 app.UseAuthentication();
 app.UseAuthorization();
-
-/*app.Map("/login/{username}", (string username) =>
+/*
+app.Map("/login/{username}", (string username) =>
 {
+     
+    using(ApiContext context = new ApiContext())
+    {
+
+    }
     var claims = new List<Claim> { new Claim(ClaimTypes.Name, username) };
     // создаем JWT-токен
     var jwt = new JwtSecurityToken(
@@ -77,7 +113,7 @@ app.UseAuthorization();
 
     return new JwtSecurityTokenHandler().WriteToken(jwt);
 });*/
-/*app.Map("/", (HttpContext context) =>
+app.Map("/", (HttpContext context) =>
 {
     var user = context.User.Identity;
     if (user is not null && user.IsAuthenticated)
@@ -88,8 +124,8 @@ app.UseAuthorization();
     {
         return "Пользователь НЕ аутентифицирован";
     }
-});*/
-app.Map("/hello", /*[Authorize]*/() => "Hello World!");
+});
+app.Map("/hello", [Authorize]() => "Hello World!");
 app.MapControllers();
 
 app.Run();
