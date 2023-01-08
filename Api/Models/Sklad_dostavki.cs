@@ -9,7 +9,7 @@ namespace Api.Models
         public int id { get; set; }
         public int sklad_rashod_id { get; set; }
         public string? address { get; set; }
-        public decimal summa { get; set; }
+        public double summa { get; set; }
         public int tip_opl_id { get; set; }
         public bool opl_klientom { get; set; }
         public Nullable<System.DateTime> data_opl_klientom { get; set; }

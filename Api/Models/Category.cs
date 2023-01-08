@@ -9,7 +9,7 @@ namespace Api.Models
         public int kod_zap { get; set; }
         public string? name { get; set; }
         public string? short_name { get; set; }
-        public string? color { get; set; }
+        //public string? color { get; set; }
         public Nullable<int> parent_kod_zap { get; set; }
 
         [ForeignKey("parent_kod_zap")]

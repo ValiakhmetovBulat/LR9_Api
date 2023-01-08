@@ -24,11 +24,11 @@ namespace Api.Controllers
         [HttpGet]
         public async Task<ActionResult<List<User>>> GetUsers()
         {
-          if (_context.Users == null)
+          if (_context.users == null)
           {
               return NotFound();
           }
-            return await _context.Users.ToListAsync();
+            return await _context.users.ToListAsync();
             
         }
 
@@ -36,11 +36,11 @@ namespace Api.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<User>> GetUser(int id)
         {
-          if (_context.Users == null)
+          if (_context.users == null)
           {
               return NotFound();
           }
-            var user = await _context.Users.FindAsync(id);
+            var user = await _context.users.FindAsync(id);
 
             if (user == null)
             {
@@ -86,11 +86,11 @@ namespace Api.Controllers
         [HttpPost]
         public async Task<ActionResult<User>> PostUser(User user)
         {
-          if (_context.Users == null)
+          if (_context.users == null)
           {
               return Problem("Entity set 'ApiContext.Users'  is null.");
           }
-            _context.Users.Add(user);
+            _context.users.Add(user);
             await _context.SaveChangesAsync();
 
             return CreatedAtAction("GetUser", new { id = user.Id }, user);
@@ -100,17 +100,17 @@ namespace Api.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteUser(int id)
         {
-            if (_context.Users == null)
+            if (_context.users == null)
             {
                 return NotFound();
             }
-            var user = await _context.Users.FindAsync(id);
+            var user = await _context.users.FindAsync(id);
             if (user == null)
             {
                 return NotFound();
             }
 
-            _context.Users.Remove(user);
+            _context.users.Remove(user);
             await _context.SaveChangesAsync();
 
             return NoContent();
@@ -118,7 +118,7 @@ namespace Api.Controllers
 
         private bool UserExists(int id)
         {
-            return (_context.Users?.Any(e => e.Id == id)).GetValueOrDefault();
+            return (_context.users?.Any(e => e.Id == id)).GetValueOrDefault();
         }
     }
 }

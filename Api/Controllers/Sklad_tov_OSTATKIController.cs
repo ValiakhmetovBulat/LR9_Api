@@ -25,15 +25,15 @@ namespace Api.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Sklad_tov_OSTATKI>>> GetSklad_tov_OSTATKI()
         {
-            _context.Tovary.Load();
-            return await _context.Sklad_tov_OSTATKI.ToListAsync();
+            _context.tovary.Load();
+            return await _context.sklad_tov_ostatki.ToListAsync();
         }
 
         // GET: api/Sklad_tov_OSTATKI/5
         [HttpGet("{id}")]
         public async Task<ActionResult<decimal>> GetSklad_tov_OSTATKI(int id)
         {
-            var sklad_tov_OSTATKI = await _context.Sklad_tov_OSTATKI.FindAsync(id);
+            var sklad_tov_OSTATKI = await _context.sklad_tov_ostatki.FindAsync(id);
 
             if (sklad_tov_OSTATKI == null || sklad_tov_OSTATKI.OSTATOK == null)
             {
@@ -47,9 +47,9 @@ namespace Api.Controllers
         [Route("categ/{id}")]
         public async Task<ActionResult<IEnumerable<Sklad_tov_OSTATKI>>> GetSklad_tov_OSTATKIByCateg(int id)
         {
-            _context.Category.Where(p => p.kod_zap == id).Load();
-            _context.Tovary.Where(p=>p.kod_categ == id).Load();
-            var sklad_tov_OSTATKI = await _context.Sklad_tov_OSTATKI.Where(p => p.Tovar != null && p.Tovar.kod_categ == id).ToListAsync();
+            _context.category.Where(p => p.kod_zap == id).Load();
+            _context.tovary.Where(p=>p.kod_categ == id).Load();
+            var sklad_tov_OSTATKI = await _context.sklad_tov_ostatki.Where(p => p.Tovar != null && p.Tovar.kod_categ == id).ToListAsync();
 
             if (sklad_tov_OSTATKI == null)
             {

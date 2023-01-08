@@ -24,14 +24,14 @@ namespace Api.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Tovary>>> GetTovary()
         {
-            return await _context.Tovary.ToListAsync();
+            return await _context.tovary.ToListAsync();
         }
 
         // GET: api/Tovary/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Tovary>> GetTovary(int id)
         {
-            var tovary = await _context.Tovary.FindAsync(id);
+            var tovary = await _context.tovary.FindAsync(id);
 
             if (tovary == null)
             {
@@ -51,8 +51,9 @@ namespace Api.Controllers
                 return BadRequest();
             }
 
-            _context.Entry(tovary).State = EntityState.Modified;
-
+            if (tovary.kod_tovara == 0) _context.Entry(tovary).State = EntityState.Added;
+            else _context.Entry(tovary).State = EntityState.Modified;
+            
             try
             {
                 await _context.SaveChangesAsync();
@@ -77,7 +78,7 @@ namespace Api.Controllers
         [HttpPost]
         public async Task<ActionResult<Tovary>> PostTovary(Tovary tovary)
         {
-            _context.Tovary.Add(tovary);
+            _context.tovary.Add(tovary);
             await _context.SaveChangesAsync();
 
             return CreatedAtAction("GetTovary", new { id = tovary.kod_tovara }, tovary);
@@ -87,13 +88,13 @@ namespace Api.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteTovary(int id)
         {
-            var tovary = await _context.Tovary.FindAsync(id);
+            var tovary = await _context.tovary.FindAsync(id);
             if (tovary == null)
             {
                 return NotFound();
             }
 
-            _context.Tovary.Remove(tovary);
+            _context.tovary.Remove(tovary);
             await _context.SaveChangesAsync();
 
             return NoContent();
@@ -101,7 +102,7 @@ namespace Api.Controllers
 
         private bool TovaryExists(int id)
         {
-            return _context.Tovary.Any(e => e.kod_tovara == id);
+            return _context.tovary.Any(e => e.kod_tovara == id);
         }
     }
 }

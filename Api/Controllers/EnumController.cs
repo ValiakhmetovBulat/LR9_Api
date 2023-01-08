@@ -22,11 +22,11 @@ namespace Api.Controllers
         [Route("Oplaty")]
         public async Task<ActionResult<List<Spr_oplat_sklad>>> GetOplaty()
         {
-            if (_context.Spr_oplat_sklad == null)
+            if (_context.spr_oplat_sklad == null)
             {
                 return NotFound();
             }
-            return await _context.Spr_oplat_sklad.ToListAsync();
+            return await _context.spr_oplat_sklad.ToListAsync();
         }
 
         
@@ -56,22 +56,33 @@ namespace Api.Controllers
         [Route("Category")]
         public async Task<ActionResult<List<Category>>> GetCategory()
         {
-            if (_context.Category == null)
+            if (_context.category == null)
             {
                 return NotFound();
             }
-            return await _context.Category.ToListAsync();
+            return await _context.category.ToListAsync();
+        }
+
+        [HttpGet]
+        [Route("Users")]
+        public async Task<ActionResult<List<User>>> GetUsers()
+        {
+            if (_context.users == null)
+            {
+                return NotFound();
+            }
+            return await _context.users.ToListAsync();
         }
 
         [HttpGet]
         [Route("YearsRashods")]
         public async Task<ActionResult<List<int>>> GetYearsRashods()
         {
-            if (_context.Sklad_rashod == null)
+            if (_context.sklad_rashod == null)
             {
                 return NotFound();
             }
-            return await _context.Sklad_rashod.Where(p=>p.data_rash != null).Select(p => p.data_rash.Value.Year).Distinct().OrderBy(p => p).ToListAsync();
+            return await _context.sklad_rashod.Where(p=>p.date_rash != null).Select(p => p.date_rash.Year).Distinct().OrderBy(p => p).ToListAsync();
         }
     }
 }

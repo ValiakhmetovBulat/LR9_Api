@@ -21,11 +21,11 @@ namespace Api.ViewModels
         public async Task<RashodyViewModel> GetVM(ApiContext apiContext)
         {
             //Rashods = new ObservableCollection<Sklad_rashod>(_rashods);
-            Spr_Oplat_Sklad = new ObservableCollection<Spr_oplat_sklad>(apiContext.Spr_oplat_sklad);
+            Spr_Oplat_Sklad = new ObservableCollection<Spr_oplat_sklad>(apiContext.spr_oplat_sklad);
             Spr_Periods_Filter = new ObservableCollection<Spr_period_filtr>(apiContext.Spr_period_filtr);
             //Spr_Managers_Filter = new ObservableCollection<string>(_rashods.Select(p => p.otpustil).Distinct().OrderBy(p => p));
             Months = new ObservableCollection<int>() { 1, 2, 3, 4, 5, 6, 8, 9, 10, 11, 12 };
-            Years = new ObservableCollection<int>(apiContext.Sklad_rashod.Select(p => p.data_rash.HasValue ? p.data_rash.Value.Year : DateTime.Now.Year).Distinct().OrderBy(p => p));
+            Years = new ObservableCollection<int>(apiContext.sklad_rashod.Select(p => p.date_rash.Year).Distinct().OrderBy(p => p));
 
             return this;
         }
