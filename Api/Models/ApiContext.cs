@@ -14,7 +14,8 @@ namespace Api.Models
         public DbSet<User> users { get; set; }
         public DbSet<Sklad_rashod> sklad_rashod { get; set; }
         public DbSet<Sklad_rashod_tov> sklad_rashod_tov { get; set; }
-        public DbSet<Sheta> sheta { get; set; }
+        public DbSet<Shet> sheta { get; set; }
+        public DbSet<Sheta_tov> sheta_tov { get; set; }
         public DbSet<Sklad_dostavki> Sklad_dostavki { get; set; }
         public DbSet<Spr_oplat_sklad> spr_oplat_sklad { get; set; }
         public DbSet<Spr_period_filtr> Spr_period_filtr { get; set; }
