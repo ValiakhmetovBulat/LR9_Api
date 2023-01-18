@@ -33,7 +33,7 @@ namespace Api.Controllers
         public async Task<ActionResult<Shet>> GetSheta(int id)
         {
             var sheta = await _context.sheta.FindAsync(id);
-
+            _context.sheta_tov.Where(p => p.kod_sheta == id).Include(p => p.Tovar).Load();
             if (sheta == null)
             {
                 return NotFound();
@@ -160,6 +160,26 @@ namespace Api.Controllers
             }
 
             _context.sheta.Remove(sheta);
+            await _context.SaveChangesAsync();
+
+            return NoContent();
+        }
+
+        [Route("Tov")]
+        [HttpDelete]
+        public async Task<IActionResult> DeleteSheta_tov(int id)
+        {
+            if (_context.sheta_tov == null)
+            {
+                return NotFound();
+            }
+            var sheta_tov = await _context.sheta_tov.FindAsync(id);
+            if (sheta_tov == null)
+            {
+                return NotFound();
+            }
+
+            _context.sheta_tov.Remove(sheta_tov);
             await _context.SaveChangesAsync();
 
             return NoContent();

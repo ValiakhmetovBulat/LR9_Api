@@ -24,7 +24,6 @@ string connection = builder.Configuration.GetConnectionString("PostgresConnectio
 builder.Services.AddDbContext<ApiContext>(options => options.UseNpgsql(connection));
 AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 
-builder.Services.AddSwaggerGen();
 builder.Services.AddSwaggerGen(swagger =>
 {
     //This is to generate the Default UI of Swagger Documentation
@@ -89,42 +88,25 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseHttpsRedirection();
+//app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseAuthentication();
 app.UseAuthorization();
-/*
-app.Map("/login/{username}", (string username) =>
-{
-     
-    using(ApiContext context = new ApiContext())
-    {
 
-    }
-    var claims = new List<Claim> { new Claim(ClaimTypes.Name, username) };
-    // создаем JWT-токен
-    var jwt = new JwtSecurityToken(
-            issuer: AuthOptions.ISSUER,
-            audience: AuthOptions.AUDIENCE,
-            claims: claims,
-            expires: DateTime.UtcNow.Add(TimeSpan.FromMinutes(120)),
-            signingCredentials: new SigningCredentials(AuthOptions.GetSymmetricSecurityKey(), SecurityAlgorithms.HmacSha256));
-
-    return new JwtSecurityTokenHandler().WriteToken(jwt);
-});*/
 app.Map("/", (HttpContext context) =>
 {
     var user = context.User.Identity;
     if (user is not null && user.IsAuthenticated)
     {
-        return $"Пользователь аутентифицирован. Тип аутентификации: {user.AuthenticationType}";
+        return $"Пользователь аутентифицирован. Тип аутентификации: {context.User.FindFirst("Id")}";
     }
     else
     {
         return "Пользователь НЕ аутентифицирован";
     }
 });
+//app.Map("/admin", [Authorize(Roles = "Admin")] () => "Admin Panel");
 app.Map("/hello", [Authorize]() => "Hello World!");
 app.MapControllers();
 

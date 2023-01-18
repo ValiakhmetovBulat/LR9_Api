@@ -8,7 +8,7 @@ using System.Security.Claims;
 
 namespace Api.Controllers
 {
-    [Authorize]
+    //[Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class EnumController : ControllerBase
