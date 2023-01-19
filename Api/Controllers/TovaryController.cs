@@ -22,37 +22,37 @@ namespace Api.Controllers
 
         // GET: api/Tovary
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Tovary>>> GetTovary()
+        public async Task<ActionResult<IEnumerable<Product>>> GetTovary()
         {
-            return await _context.tovary.ToListAsync();
+            return await _context.Products.ToListAsync();
         }
 
         // GET: api/Tovary/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Tovary>> GetTovary(int id)
+        public async Task<ActionResult<Product>> GetTovary(int id)
         {
-            var tovary = await _context.tovary.FindAsync(id);
+            var Products = await _context.Products.FindAsync(id);
 
-            if (tovary == null)
+            if (Products == null)
             {
                 return NotFound();
             }
 
-            return tovary;
+            return Products;
         }
 
         // PUT: api/Tovary/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutTovary(int id, Tovary tovary)
+        public async Task<IActionResult> PutTovary(int id, Product Products)
         {
-            if (id != tovary.kod_tovara)
+            if (id != Products.ID)
             {
                 return BadRequest();
             }
 
-            if (tovary.kod_tovara == 0) _context.Entry(tovary).State = EntityState.Added;
-            else _context.Entry(tovary).State = EntityState.Modified;
+            if (Products.ID == 0) _context.Entry(Products).State = EntityState.Added;
+            else _context.Entry(Products).State = EntityState.Modified;
             
             try
             {
@@ -76,25 +76,25 @@ namespace Api.Controllers
         // POST: api/Tovary
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Tovary>> PostTovary(Tovary tovary)
+        public async Task<ActionResult<Product>> PostTovary(Product Products)
         {
-            _context.tovary.Add(tovary);
+            _context.Products.Add(Products);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetTovary", new { id = tovary.kod_tovara }, tovary);
+            return CreatedAtAction("GetTovary", new { id = Products.ID }, Products);
         }
 
         // DELETE: api/Tovary/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteTovary(int id)
         {
-            var tovary = await _context.tovary.FindAsync(id);
-            if (tovary == null)
+            var Products = await _context.Products.FindAsync(id);
+            if (Products == null)
             {
                 return NotFound();
             }
 
-            _context.tovary.Remove(tovary);
+            _context.Products.Remove(Products);
             await _context.SaveChangesAsync();
 
             return NoContent();
@@ -102,7 +102,7 @@ namespace Api.Controllers
 
         private bool TovaryExists(int id)
         {
-            return _context.tovary.Any(e => e.kod_tovara == id);
+            return _context.Products.Any(e => e.ID == id);
         }
     }
 }

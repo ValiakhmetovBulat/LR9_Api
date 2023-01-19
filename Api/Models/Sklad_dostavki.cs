@@ -36,7 +36,7 @@ namespace Api.Models
         public virtual Sklad_rashod? Sklad_rashod { get; set; }
 
         [ForeignKey("tip_opl_id")]
-        public virtual Spr_oplat_sklad? Spr_oplat_sklad { get; set; }
+        public virtual Type_oplaty? Spr_oplat_sklad { get; set; }
 
         [ForeignKey("karta_id")]
         public virtual Karta? Karta { get; set; }

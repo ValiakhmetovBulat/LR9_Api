@@ -29,11 +29,11 @@ namespace Api.Controllers
         [HttpGet]
         public async Task<ActionResult<List<User>>> GetUsers()
         {
-            if (_context.users == null)
+            if (_context.Users == null)
             {
                 return NotFound();
             }
-            return await _context.users.ToListAsync();
+            return await _context.Users.ToListAsync();
 
         }
 
@@ -42,11 +42,11 @@ namespace Api.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<User>> GetUser(int id)
         {
-            if (_context.users == null)
+            if (_context.Users == null)
             {
                 return NotFound();
             }
-            var user = await _context.users.FindAsync(id);
+            var user = await _context.Users.FindAsync(id);
 
             if (user == null)
             {
@@ -60,11 +60,11 @@ namespace Api.Controllers
         [HttpGet]
         public async Task<ActionResult<string>> GetToken(string username, string password)
         {
-            User user = _context.users.Where(p => p.Login == username).FirstOrDefault();
+            User user = _context.Users.Where(p => p.login == username).FirstOrDefault();
             if (user != null)
             {
-                if (user.Password != password) return Unauthorized();
-                var claims = new List<Claim> { new Claim(ClaimTypes.Name, username), new Claim("Id", user.Id.ToString()), new Claim(ClaimsIdentity.DefaultRoleClaimType, "Admin") }; 
+                if (user.password != password) return Unauthorized();
+                var claims = new List<Claim> { new Claim(ClaimTypes.Name, username), new Claim("ID", user.ID.ToString()), new Claim(ClaimsIdentity.DefaultRoleClaimType, user.role) }; 
                 // создаем JWT-токен
                 var jwt = new JwtSecurityToken(
                         issuer: AuthOptions.ISSUER,
@@ -84,7 +84,7 @@ namespace Api.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> PutUser(int id, User user)
         {
-            if (id != user.Id)
+            if (id != user.ID)
             {
                 return BadRequest();
             }
@@ -97,7 +97,7 @@ namespace Api.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!UserExists(id))
+                if (!UserExists(user.login))
                 {
                     return NotFound();
                 }
@@ -110,20 +110,21 @@ namespace Api.Controllers
             return NoContent();
         }
 
-        [Authorize]
+        //[Authorize]
         // POST: api/Users
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
         public async Task<ActionResult<User>> PostUser(User user)
         {
-          if (_context.users == null)
+          if (_context.Users == null)
           {
               return Problem("Entity set 'ApiContext.Users'  is null.");
           }
-            _context.users.Add(user);
+          if(UserExists(user.login)) return BadRequest("Пользователь с таким логином существует");
+            _context.Users.Add(user);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetUser", new { id = user.Id }, user);
+            return CreatedAtAction("GetUser", new { id = user.ID }, user);
         }
 
         [Authorize]
@@ -131,25 +132,25 @@ namespace Api.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteUser(int id)
         {
-            if (_context.users == null)
+            if (_context.Users == null)
             {
                 return NotFound();
             }
-            var user = await _context.users.FindAsync(id);
+            var user = await _context.Users.FindAsync(id);
             if (user == null)
             {
                 return NotFound();
             }
 
-            _context.users.Remove(user);
+            _context.Users.Remove(user);
             await _context.SaveChangesAsync();
 
             return NoContent();
         }
 
-        private bool UserExists(int id)
+        private bool UserExists(string login)
         {
-            return (_context.users?.Any(e => e.Id == id)).GetValueOrDefault();
+            return (_context.Users?.Any(e => e.login == login)).GetValueOrDefault();
         }
     }
 }

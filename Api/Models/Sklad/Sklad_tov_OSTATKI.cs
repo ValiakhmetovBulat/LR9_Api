@@ -26,6 +26,6 @@ namespace Api.Models.Sklad
         public string? naim2 { get; set; }*/
 
         [ForeignKey("kod_tovara")]
-        public virtual Tovary? Tovar { get; set; }
+        public virtual Product? Tovar { get; set; }
     }
 }

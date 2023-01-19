@@ -4,11 +4,12 @@ namespace Api.Models
 {
     public class User
     {
-        public int Id { get; set; }
-        public string Surname { get; set; }
-        public string Name { get; set; }
-        public string Login { get; set; }
-        [JsonIgnore]
-        public string Password { get; set; }
+        public int ID { get; set; }
+        public string surname { get; set; }
+        public string name { get; set; }
+        public string? papaname { get; set; }
+        public string login { get; set; }
+        public string password { get; set; }
+        public string role { get; set; }
     }
 }

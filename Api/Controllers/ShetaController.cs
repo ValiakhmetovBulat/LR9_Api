@@ -12,28 +12,28 @@ namespace Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ShetaController : ControllerBase
+    public class ShetsController : ControllerBase
     {
         private readonly ApiContext _context;
 
-        public ShetaController(ApiContext context)
+        public ShetsController(ApiContext context)
         {
             _context = context;
         }
 
-        // GET: api/Sheta
+        // GET: api/Shets
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Shet>>> Getsheta()
         {
-            return await _context.sheta.ToListAsync();
+            return await _context.Shets.ToListAsync();
         }
 
         // GET: api/Sheta/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Shet>> GetSheta(int id)
         {
-            var sheta = await _context.sheta.FindAsync(id);
-            _context.sheta_tov.Where(p => p.kod_sheta == id).Include(p => p.Tovar).Load();
+            var sheta = await _context.Shets.FindAsync(id);
+            _context.Shet_prods.Where(p => p.shetID == id).Include(p => p.Tovar).Load();
             if (sheta == null)
             {
                 return NotFound();
@@ -47,19 +47,19 @@ namespace Api.Controllers
         [HttpPost]
         public async Task<ActionResult<List<Shet>>> GetShetaByFilter(RashodyQueryParams? queryParams)
         {
-            if (_context.sheta == null)
+            if (_context.Shets == null)
             {
                 return NotFound();
             }
 
-            List<Shet> _rashods = new List<Shet>();
+            List<Shet> _sheta = new List<Shet>();
             if (queryParams != null)
             {
                 switch (queryParams.DateFilter)
                 {
                     case 1:
                         {
-                            _rashods = await _context.sheta.
+                            _sheta = await _context.Shets.
                                 Where(p => (queryParams.StartDate.HasValue ? p.date_sheta.Date >= queryParams.StartDate.Value.Date : true)
                                         && (queryParams.EndDate.HasValue ? p.date_sheta.Date <= queryParams.EndDate.Value.Date : true))
                                 /*.Include(p => p.Sheta)*//*.Include(p => p.Spr_oplat_sklad)*//*.Include(p => p.Sklad_dostavki)*/.ToListAsync();
@@ -71,7 +71,7 @@ namespace Api.Controllers
                         }
                     case 3:
                         {
-                            _rashods = await _context.sheta.
+                            _sheta = await _context.Shets.
                                 Where(p => (queryParams.StartDate.HasValue && p.date_oplaty.HasValue ? p.date_oplaty.Value.Date >= queryParams.StartDate.Value.Date : true)
                                         && (queryParams.EndDate.HasValue && p.date_oplaty.HasValue ? p.date_oplaty.Value.Date <= queryParams.EndDate.Value.Date : true))
                                 /*.Include(p => p.Sheta)*//*.Include(p => p.Spr_oplat_sklad)*//*.Include(p => p.Sklad_dostavki)*/.ToListAsync();
@@ -79,19 +79,19 @@ namespace Api.Controllers
                         }
                 }
 
-                if (queryParams.SelectedOplachen != null) _rashods = _rashods.Where(p => p.oplachen == queryParams.SelectedOplachen.Value).ToList();
-                if (queryParams.SelectedManager != null) _rashods = _rashods.Where(p => p.id_polz == queryParams.SelectedManager.Id).ToList();
+                if (queryParams.SelectedOplachen != null) _sheta = _sheta.Where(p => p.oplachen == queryParams.SelectedOplachen.Value).ToList();
+                if (queryParams.SelectedManager != null) _sheta = _sheta.Where(p => p.userID == queryParams.SelectedManager.ID).ToList();
 
                 if (queryParams.Search != null && queryParams.Search != "")
                 {
-                    _rashods = _rashods.Where(p => p.nom_shet.ToString() == queryParams.Search
+                    _sheta = _sheta.Where(p => p.nom_shet.ToString() == queryParams.Search
                                             || (p.prim != null ? p.prim.Contains(queryParams.Search) : false)).ToList();
                 }
             }
-            else _rashods = await _context.sheta.ToListAsync();
-            _context.users.Load();
-            _context.sheta_tov.Load();
-            return _rashods;
+            else _sheta = await _context.Shets.ToListAsync();
+            _context.Users.Load();
+            _context.Shet_prods.Load();
+            return _sheta;
         }
 
         // PUT: api/Sheta/5
@@ -99,7 +99,7 @@ namespace Api.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> PutSheta(int id, Shet sheta)
         {
-            if (id != sheta.kod_zap)
+            if (id != sheta.ID)
             {
                 return BadRequest();
             }
@@ -110,9 +110,9 @@ namespace Api.Controllers
 
             if (sheta.Sheta_tov != null)
             {
-                foreach(Sheta_tov tov in sheta.Sheta_tov)
+                foreach(Shet_prods tov in sheta.Sheta_tov)
                 {
-                    if(tov.kod_zap == 0) _context.Entry(tov).State = EntityState.Added;
+                    if(tov.ID == 0) _context.Entry(tov).State = EntityState.Added;
                     else _context.Entry(tov).State = EntityState.Modified;
                 }
             }
@@ -141,25 +141,26 @@ namespace Api.Controllers
         public async Task<ActionResult<Shet>> PostSheta(Shet sheta)
         {
             sheta.date_sheta = DateTime.Now;
-            sheta.id_polz = 1;
-            sheta.nom_shet = _context.sheta.Where(p=>p.date_sheta.Year == sheta.date_sheta.Year).Max(p => p.nom_shet) + 1;
-            _context.sheta.Add(sheta);
+            sheta.userID = 1;
+            sheta.nom_shet = _context.Shets.Where(p=>p.date_sheta.Year == sheta.date_sheta.Year).Count() > 0 ? 
+                _context.Shets.Where(p => p.date_sheta.Year == sheta.date_sheta.Year).Max(p => p.nom_shet) + 1 : 1;
+            _context.Shets.Add(sheta);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetSheta", new { id = sheta.kod_zap }, sheta);
+            return CreatedAtAction("GetSheta", new { id = sheta.ID }, sheta);
         }
 
         // DELETE: api/Sheta/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteSheta(int id)
         {
-            var sheta = await _context.sheta.FindAsync(id);
+            var sheta = await _context.Shets.FindAsync(id);
             if (sheta == null)
             {
                 return NotFound();
             }
 
-            _context.sheta.Remove(sheta);
+            _context.Shets.Remove(sheta);
             await _context.SaveChangesAsync();
 
             return NoContent();
@@ -169,17 +170,17 @@ namespace Api.Controllers
         [HttpDelete]
         public async Task<IActionResult> DeleteSheta_tov(int id)
         {
-            if (_context.sheta_tov == null)
+            if (_context.Shet_prods == null)
             {
                 return NotFound();
             }
-            var sheta_tov = await _context.sheta_tov.FindAsync(id);
+            var sheta_tov = await _context.Shet_prods.FindAsync(id);
             if (sheta_tov == null)
             {
                 return NotFound();
             }
 
-            _context.sheta_tov.Remove(sheta_tov);
+            _context.Shet_prods.Remove(sheta_tov);
             await _context.SaveChangesAsync();
 
             return NoContent();
@@ -187,7 +188,7 @@ namespace Api.Controllers
 
         private bool ShetaExists(int id)
         {
-            return _context.sheta.Any(e => e.kod_zap == id);
+            return _context.Shets.Any(e => e.ID == id);
         }
     }
 }

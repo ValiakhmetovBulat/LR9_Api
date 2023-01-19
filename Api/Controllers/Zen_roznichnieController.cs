@@ -23,17 +23,17 @@ namespace Api.Controllers
 
         // GET: api/Zen_roznichnie
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Zen>>> GetZen_roznichnie()
+        public async Task<ActionResult<IEnumerable<Price>>> GetZen_roznichnie()
         {
 
-            return await _context.zen.Include(p=>p.Tovar).ToListAsync();
+            return await _context.Prices.Include(p=>p.Tovar).ToListAsync();
         }
 
         // GET: api/Zen_roznichnie/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Zen>> GetZen_roznichnie(int id)
+        public async Task<ActionResult<Price>> GetZen_roznichnie(int id)
         {
-            var zen_roznichnie = _context.zen.Where(p => p.tov == id).FirstOrDefault();
+            var zen_roznichnie = _context.Prices.Where(p => p.productID == id).FirstOrDefault();
             if (zen_roznichnie == null) return NotFound();
 
             return zen_roznichnie;
@@ -45,39 +45,20 @@ namespace Api.Controllers
         public async Task<ActionResult<double>> GetZena(int id, int tipOplaty, int count)
         {
             double? zena = -1;
-            var zen_roznichnie = _context.zen.Where(p => p.tov == id).FirstOrDefault();
+            var zen_roznichnie = _context.Prices.Where(p => p.productID == id).FirstOrDefault();
             if (zen_roznichnie == null) return NotFound();
-            if (tipOplaty == 2) zena = zen_roznichnie.zena_ot_lista_bnal;
-            else zena = zen_roznichnie.zena_ot_lista_nal;
-            /*_context.Prays_Zagolovki.Where(p => p.kod_zap == zen_roznichnie.kod_zagolovka).Load();
-            if (zen_roznichnie.Zagolovki == null) return BadRequest("У товара нет заголовка");
-            if (count >= zen_roznichnie.Zagolovki.number2)
-            {
-                if (tipOplaty == 2) zena = zen_roznichnie.zena_ot_4x_pachek;
-                else zena = zen_roznichnie.zena_ot_4x_pachek;
-            }
-            else if (count >= zen_roznichnie.Zagolovki.number1)
-            {
-                if (tipOplaty == 2) zena = zen_roznichnie.zena_ot_pachki;
-                else zena = zen_roznichnie.zena_ot_pachki_nal;
-            }
-            else
-            {
-                if (tipOplaty == 2) zena = zen_roznichnie.zena_ot_lista;
-                else zena = zen_roznichnie.zena_ot_lista_nal;
-            }*/
-
+            if (tipOplaty == 2) zena = zen_roznichnie.price_beznal;
+            else zena = zen_roznichnie.price_nal;
             if (zena == null) return BadRequest("Неверная цена");
-
             return zena.Value;
         }
 
         // PUT: api/Zen_roznichnie/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutZen_roznichnie(int id, Zen zen_roznichnie)
+        public async Task<IActionResult> PutZen_roznichnie(int id, Price zen_roznichnie)
         {
-            if (id != zen_roznichnie.tov)
+            if (id != zen_roznichnie.ID)
             {
                 return BadRequest();
             }
@@ -106,16 +87,16 @@ namespace Api.Controllers
         // POST: api/Zen_roznichnie
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Zen>> PostZen_roznichnie(Zen zen_roznichnie)
+        public async Task<ActionResult<Price>> PostZen_roznichnie(Price zen_roznichnie)
         {
-            _context.zen.Add(zen_roznichnie);
+            _context.Prices.Add(zen_roznichnie);
             try
             {
                 await _context.SaveChangesAsync();
             }
             catch (DbUpdateException)
             {
-                if (Zen_roznichnieExists(zen_roznichnie.tov))
+                if (Zen_roznichnieExists(zen_roznichnie.ID))
                 {
                     return Conflict();
                 }
@@ -125,20 +106,20 @@ namespace Api.Controllers
                 }
             }
 
-            return CreatedAtAction("GetZen_roznichnie", new { id = zen_roznichnie.tov }, zen_roznichnie);
+            return CreatedAtAction("GetZen_roznichnie", new { id = zen_roznichnie.ID }, zen_roznichnie);
         }
 
         // DELETE: api/Zen_roznichnie/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteZen_roznichnie(int id)
         {
-            var zen_roznichnie = await _context.zen.FindAsync(id);
+            var zen_roznichnie = await _context.Prices.FindAsync(id);
             if (zen_roznichnie == null)
             {
                 return NotFound();
             }
 
-            _context.zen.Remove(zen_roznichnie);
+            _context.Prices.Remove(zen_roznichnie);
             await _context.SaveChangesAsync();
 
             return NoContent();
@@ -146,7 +127,7 @@ namespace Api.Controllers
 
         private bool Zen_roznichnieExists(int id)
         {
-            return _context.zen.Any(e => e.tov == id);
+            return _context.Prices.Any(e => e.ID == id);
         }
     }
 }

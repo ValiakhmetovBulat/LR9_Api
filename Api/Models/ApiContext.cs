@@ -11,21 +11,18 @@ namespace Api.Models
         {
         }
 
-        public DbSet<User> users { get; set; }
-        public DbSet<Sklad_rashod> sklad_rashod { get; set; }
-        public DbSet<Sklad_rashod_tov> sklad_rashod_tov { get; set; }
-        public DbSet<Shet> sheta { get; set; }
-        public DbSet<Sheta_tov> sheta_tov { get; set; }
-        public DbSet<Sklad_dostavki> Sklad_dostavki { get; set; }
-        public DbSet<Spr_oplat_sklad> spr_oplat_sklad { get; set; }
-        public DbSet<Spr_period_filtr> Spr_period_filtr { get; set; }
-        public DbSet<Karta> Karta { get; set; }
-        public DbSet<Tovary> tovary { get; set; }
-        public DbSet<Zen> zen { get; set; }
-        public DbSet<Prays_zagolovki> Prays_Zagolovki { get; set; }
-        public DbSet<Sklad_tov_OSTATKI> sklad_tov_ostatki { get; set; }
-        public DbSet<Category> category { get; set; }
-        public DbSet<Sklad_prihod> sklad_prihod { get; set; }
-        public DbSet<Sklad_prihod_tov> sklad_prihod_tov { get; set; }
+        public DbSet<User> Users { get; set; }
+        public DbSet<Sklad_rashod> Sklad_rashods { get; set; }
+        public DbSet<Sklad_rashod_prods> Sklad_rashod_prods { get; set; }
+        public DbSet<Shet> Shets { get; set; }
+        public DbSet<Shet_prods> Shet_prods { get; set; }
+        public DbSet<Type_oplaty> Types_oplaty { get; set; }
+        public DbSet<Product> Products { get; set; }
+        public DbSet<Price> Prices { get; set; }
+        public DbSet<Category> Categories { get; set; }
+        public DbSet<Sklad_prihod> Sklad_prihods { get; set; }
+        public DbSet<Sklad_prihod_prods> Sklad_prihod_prods { get; set; }
+        public DbSet<Manufacture> Manufactures { get; set; }
+        public DbSet<Contractor> Contractors { get; set; }
     }
 }

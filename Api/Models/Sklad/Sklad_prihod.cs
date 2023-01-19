@@ -7,26 +7,24 @@ namespace Api.Models.Sklad
     {
         public Sklad_prihod()
         {
-            this.Sklad_prihod_tov = new HashSet<Sklad_prihod_tov>();
+            this.Sklad_prihod_tov = new HashSet<Sklad_prihod_prods>();
         }
         [Key]
-        public int kod_zap { get; set; }
-        public DateTime date_prih { get; set; }
-        public int id_polz { get; set; }
-        public string? prim { get; set; }
+        public int ID { get; set; }
         public int nom_prih { get; set; }
-        public Nullable<int> kod_poluch { get; set; }
-        //public string oplata_dost { get; set; }
+        public DateTime date_prih { get; set; }
+        public Nullable<int> contractorID { get; set; }
         public Nullable<bool> transport_ot_post { get; set; }
-        public Nullable<bool> is_corrected { get; set; }
+        public int userID { get; set; }
+        public Nullable<bool> is_korr { get; set; }
         public bool is_in_sklad { get; set; }
-        //public Nullable<bool> is_tr_opl { get; set; }
-        public Nullable<int> kod_perevoz { get; set; }
-        public Nullable<int> kod_shet { get; set; }
+        public Nullable<double> deliv_cost { get; set; }
         public Nullable<double> dop_rash { get; set; }
-        public Nullable<double> cost_dost { get; set; }
-        public virtual ICollection<Sklad_prihod_tov> Sklad_prihod_tov { get; set; }
-        [ForeignKey("id_polz")]
+        public string? prim { get; set; }
+        public virtual ICollection<Sklad_prihod_prods> Sklad_prihod_tov { get; set; }
+        [ForeignKey("userID")]
         public virtual User? Polz { get; set; }
+        [ForeignKey("contractorID")]
+        public virtual Contractor? Contractor { get; set; }
     }
 }

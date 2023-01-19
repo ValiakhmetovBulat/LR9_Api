@@ -13,12 +13,12 @@
         public int DateFilter { get; set; }
         public bool? SelectedOplachen { get; set; }
         public bool? SelectedOtgruzheno { get; set; }
-        public Spr_oplat_sklad? SelectedTipOpl { get; set; }
+        public Type_oplaty? SelectedTipOpl { get; set; }
         public User? SelectedManager { get; set; }
         public string Search { get; set; }
         //public Tovary SearchTovar { get; set; }
 
-        public RashodyQueryParams(DateTime? startDate, DateTime? endDate, string search, Spr_oplat_sklad oplata, User user, bool? otgr, bool? opl, int dateFilter = 1)
+        public RashodyQueryParams(DateTime? startDate, DateTime? endDate, string search, Type_oplaty oplata, User user, bool? otgr, bool? opl, int dateFilter = 1)
         {
             this.StartDate = startDate;
             this.EndDate = endDate;

@@ -23,18 +23,18 @@ namespace Api.Controllers
         
         [HttpGet]
         [Route("Oplaty")]
-        public async Task<ActionResult<List<Spr_oplat_sklad>>> GetOplaty()
+        public async Task<ActionResult<List<Type_oplaty>>> GetOplaty()
         {
-            if (_context.spr_oplat_sklad == null)
+            if (_context.Types_oplaty == null)
             {
                 return NotFound();
             }
-            //_context.users.FindFirst(ClaimTypes.NameIdentifier).Value;
-            return await _context.spr_oplat_sklad.ToListAsync();
+            //_context.Users.FindFirst(ClaimTypes.NameIdentifier).Value;
+            return await _context.Types_oplaty.ToListAsync();
         }
 
         
-        [HttpGet]
+        /*[HttpGet]
         [Route("Periods")]
         public async Task<ActionResult<List<Spr_period_filtr>>> GetPeriods()
         {
@@ -43,9 +43,9 @@ namespace Api.Controllers
                 return NotFound();
             }
             return await _context.Spr_period_filtr.ToListAsync();
-        }
+        }*/
 
-        [HttpGet]
+        /*[HttpGet]
         [Route("Karty")]
         public async Task<ActionResult<List<Karta>>> GetKarty()
         {
@@ -54,39 +54,39 @@ namespace Api.Controllers
                 return NotFound();
             }
             return await _context.Karta.OrderBy(p=>p.name).ToListAsync();
-        }
+        }*/
 
         [HttpGet]
         [Route("Category")]
         public async Task<ActionResult<List<Category>>> GetCategory()
         {
-            if (_context.category == null)
+            if (_context.Categories == null)
             {
                 return NotFound();
             }
-            return await _context.category.ToListAsync();
+            return await _context.Categories.ToListAsync();
         }
 
         [HttpGet]
         [Route("Users")]
         public async Task<ActionResult<List<User>>> GetUsers()
         {
-            if (_context.users == null)
+            if (_context.Users == null)
             {
                 return NotFound();
             }
-            return await _context.users.ToListAsync();
+            return await _context.Users.ToListAsync();
         }
 
         [HttpGet]
         [Route("YearsRashods")]
         public async Task<ActionResult<List<int>>> GetYearsRashods()
         {
-            if (_context.sklad_rashod == null)
+            if (_context.Sklad_rashods == null)
             {
                 return NotFound();
             }
-            return await _context.sklad_rashod.Where(p=>p.date_rash != null).Select(p => p.date_rash.Year).Distinct().OrderBy(p => p).ToListAsync();
+            return await _context.Sklad_rashods.Where(p=>p.date_rash != null).Select(p => p.date_rash.Year).Distinct().OrderBy(p => p).ToListAsync();
         }
     }
 }

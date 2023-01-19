@@ -22,11 +22,11 @@ namespace Api.Controllers
         }
 
         // GET: api/Sklad_tov_OSTATKI
-        [HttpGet]
+        /*[HttpGet]
         public async Task<ActionResult<IEnumerable<Sklad_tov_OSTATKI>>> GetSklad_tov_OSTATKI()
         {
-            _context.tovary.Load();
-            return await _context.sklad_tov_ostatki.ToListAsync();
+            *//*_context.Products.Load();
+            return await _context.sklad_tov_ostatki.ToListAsync();*//*
         }
 
         // GET: api/Sklad_tov_OSTATKI/5
@@ -47,9 +47,9 @@ namespace Api.Controllers
         [Route("categ/{id}")]
         public async Task<ActionResult<IEnumerable<Sklad_tov_OSTATKI>>> GetSklad_tov_OSTATKIByCateg(int id)
         {
-            _context.category.Where(p => p.kod_zap == id).Load();
-            _context.tovary.Where(p=>p.kod_categ == id).Load();
-            var sklad_tov_OSTATKI = await _context.sklad_tov_ostatki.Where(p => p.Tovar != null && p.Tovar.kod_categ == id).ToListAsync();
+            _context.Categories.Where(p => p.ID == id).Load();
+            _context.Products.Where(p=>p.categoryID == id).Load();
+            var sklad_tov_OSTATKI = new List<Sklad_tov_OSTATKI>();// await _context.sklad_tov_ostatki.Where(p => p.Tovar != null && p.Tovar.kod_categ == id).ToListAsync();
 
             if (sklad_tov_OSTATKI == null)
             {
@@ -57,6 +57,6 @@ namespace Api.Controllers
             }
 
             return sklad_tov_OSTATKI;
-        }
+        }*/
     }
 }

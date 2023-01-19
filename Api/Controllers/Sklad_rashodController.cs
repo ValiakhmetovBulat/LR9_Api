@@ -6,7 +6,6 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Api.Models;
-using Api.ViewModels;
 using Api.Models.Sklad;
 using Microsoft.AspNetCore.StaticFiles;
 
@@ -28,22 +27,20 @@ namespace Api.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<Sklad_rashod>> GetSklad_rashod(int id)
         {
-            if (_context.sklad_rashod == null)
+            if (_context.Sklad_rashods == null)
             {
                 return NotFound();
             }
-            var sklad_rashod = await _context.sklad_rashod.FindAsync(id);
+            var Sklad_rashods = await _context.Sklad_rashods.FindAsync(id);
 
-            if (sklad_rashod == null)
+            if (Sklad_rashods == null)
             {
                 return NotFound();
             }
 
-            _context.sklad_rashod_tov.Where(p => p.kod_rashoda == id).Include(p => p.Tovar).Load();
-            /*_context.Sheta.Where(p => p.kod_zap == sklad_rashod.shet).Load();
-            _context.Sklad_dostavki.Where(p => p.sklad_rashod_id == sklad_rashod.kod_zap).Load();*/
-            //_context.Karta.Where(p => p.Id == sklad_rashod.karta).Load();
-            return sklad_rashod;
+            _context.Sklad_rashod_prods.Where(p => p.rashodID == id).Include(p => p.Tovar).Load();
+            _context.Shets.Where(p => p.ID == Sklad_rashods.shetID).Load();
+            return Sklad_rashods;
         }
         #region В пдф
         /*        // GET: api/Sklad_rashod/5
@@ -51,16 +48,16 @@ namespace Api.Controllers
                 [HttpGet]
                 public async Task<IActionResult> GetSklad_rashod_file(int id, string format, bool printZeny, bool printBeznal)
                 {
-                    if (_context.sklad_rashod == null)
+                    if (_context.Sklad_rashods == null)
                     {
                         return NotFound();
                     }
-                    var sklad_rashod = await _context.sklad_rashod.FindAsync(id);
+                    var Sklad_rashods = await _context.Sklad_rashods.FindAsync(id);
                     _context.Sklad_rashod_tov.Where(p => p.kod_rashoda == id).Include(p => p.Tovar).Load();
-                    _context.Sheta.Where(p => p.kod_zap == sklad_rashod.shet).Load();
-                    _context.Sklad_dostavki.Where(p => p.sklad_rashod_id == sklad_rashod.kod_zap).Load();
+                    _context.Sheta.Where(p => p.ID == Sklad_rashods.shet).Load();
+                    _context.Sklad_dostavki.Where(p => p.sklad_rashod_id == Sklad_rashods.ID).Load();
 
-                    if (sklad_rashod == null)
+                    if (Sklad_rashods == null)
                     {
                         return NotFound();
                     }
@@ -90,19 +87,19 @@ namespace Api.Controllers
                         //первый лист в файле
                         Excel.Worksheet xlSht = xlWb.Sheets[1];
                         //сохраняем номер счета и плательщика
-                        *//*if (sklad_rashod.Sheta != null)
+                        *//*if (Sklad_rashods.Sheta != null)
                         {
-                            string platelshik = sklad_rashod.Sheta.nom_1C.ToString();
+                            string platelshik = Sklad_rashods.Sheta.nom_1C.ToString();
 
                             xlSht.Cells[2, 1].Value = platelshik;
                             xlSht.Cells[31, 1].Value = platelshik;
                         }*//*
 
-                        xlSht.Cells[4, 1].Value = "Товарный чек №  " + sklad_rashod.nom_rash + " от  " + sklad_rashod.date_rash.ToShortDateString() + " г.";
-                        xlSht.Cells[32, 1].Value = "Товарный чек №  " + sklad_rashod.nom_rash + " от  " + sklad_rashod.date_rash.ToShortDateString() + " г.";
+                        xlSht.Cells[4, 1].Value = "Товарный чек №  " + Sklad_rashods.nom_rash + " от  " + Sklad_rashods.date_rash.ToShortDateString() + " г.";
+                        xlSht.Cells[32, 1].Value = "Товарный чек №  " + Sklad_rashods.nom_rash + " от  " + Sklad_rashods.date_rash.ToShortDateString() + " г.";
 
                         int nom_str = 0;
-                        var linq = sklad_rashod.Sklad_rashod_tov
+                        var linq = Sklad_rashods.Sklad_rashod_tov
                             .GroupBy(g => g.kod_tovara)
                             .Select(s => new
                             {
@@ -171,15 +168,15 @@ namespace Api.Controllers
 
                         decimal sum_nal = 0;
                         decimal sum_beznal = 0;
-                        decimal sum = sklad_rashod.SummaAll;
-                        decimal sum_dost = sklad_rashod.SummaDost;
+                        decimal sum = Sklad_rashods.SummaAll;
+                        decimal sum_dost = Sklad_rashods.SummaDost;
 
                         if (printZeny)
                         {
                             xlSht.Cells[16, 13].Value = sum.ToString();
                             xlSht.Cells[44, 13].Value = sum.ToString();
 
-                            if (*//*checkBox_oplNaVigr.Checked ||*//*sklad_rashod.na_pechat_dost.Value)
+                            if (*//*checkBox_oplNaVigr.Checked ||*//*Sklad_rashods.na_pechat_dost.Value)
                             {
                                 xlSht.Cells[44, 11].Value = "Товары";
                                 xlSht.Cells[46, 11].Value = "Доставка";
@@ -207,7 +204,7 @@ namespace Api.Controllers
                             }
 
 
-                            *//*if (sklad_rashod.oplata == 20003) // Терминал
+                            *//*if (Sklad_rashods.oplata == 20003) // Терминал
                             {
                                 decimal nds = sum * 20 / 120;
                                 nds = Math.Round(nds, 2, MidpointRounding.AwayFromZero);
@@ -233,18 +230,18 @@ namespace Api.Controllers
                             tRange = xlSht.get_Range("e51", "n51");
                             tRange.Borders.LineStyle = Microsoft.Office.Interop.Excel.XlLineStyle.xlLineStyleNone;
                         }
-                        if (sklad_rashod.CountDost >= 1)
+                        if (Sklad_rashods.CountDost >= 1)
                         {
                             //пока первая доставка
-                            Sklad_dostavki dost = sklad_rashod.Sklad_dostavki.FirstOrDefault();
+                            Sklad_dostavki dost = Sklad_rashods.Sklad_dostavki.FirstOrDefault();
                             xlSht.Cells[25, 8].Value = dost.address;
                             xlSht.Cells[55, 8].Value = dost.address;
 
-                            xlSht.Cells[27, 8].Value = dost.voditel_id + " (Доставка:" + sklad_rashod.SummaDost + "р.)"; ;
-                            xlSht.Cells[57, 8].Value = dost.voditel_id + " (Доставка:" + sklad_rashod.SummaDost + "р.)"; ;
+                            xlSht.Cells[27, 8].Value = dost.voditel_id + " (Доставка:" + Sklad_rashods.SummaDost + "р.)"; ;
+                            xlSht.Cells[57, 8].Value = dost.voditel_id + " (Доставка:" + Sklad_rashods.SummaDost + "р.)"; ;
                             xlSht.Cells[46, 1].Value = "Выгрузка платная, заказывается и оплачивается заранее.";
                         }
-                        *//*else if (sklad_rashod.CountDost > 1)
+                        *//*else if (Sklad_rashods.CountDost > 1)
                         {
                             *//*SetOutputDostavka();
                             if (OutputDostavkaId != 0)
@@ -269,12 +266,12 @@ namespace Api.Controllers
                         }*//*
 
 
-                        xlSht.Cells[22, 11].Value = "+7" + sklad_rashod.second_phone + " " + sklad_rashod.name_kontact_person +
-                            (sklad_rashod.name_pokup != "(   )    -" ? " +7" + sklad_rashod.name_pokup + " " + sklad_rashod.first_phone : "");
-                        xlSht.Cells[53, 11].Value = "+7" + sklad_rashod.second_phone + " " + sklad_rashod.name_kontact_person +
-                            (sklad_rashod.name_pokup != "(   )    -" ? " +7" + sklad_rashod.name_pokup + " " + sklad_rashod.first_phone : "");
+                        xlSht.Cells[22, 11].Value = "+7" + Sklad_rashods.second_phone + " " + Sklad_rashods.name_kontact_person +
+                            (Sklad_rashods.name_pokup != "(   )    -" ? " +7" + Sklad_rashods.name_pokup + " " + Sklad_rashods.first_phone : "");
+                        xlSht.Cells[53, 11].Value = "+7" + Sklad_rashods.second_phone + " " + Sklad_rashods.name_kontact_person +
+                            (Sklad_rashods.name_pokup != "(   )    -" ? " +7" + Sklad_rashods.name_pokup + " " + Sklad_rashods.first_phone : "");
 
-                        xlSht.Cells[22, 3].Value = sklad_rashod.prim_zav_sklad;
+                        xlSht.Cells[22, 3].Value = Sklad_rashods.prim_zav_sklad;
 
                         if (!printBeznal)
                         {
@@ -295,7 +292,7 @@ namespace Api.Controllers
                             Directory.CreateDirectory(path);
                         }
 
-                        string filename = $@"D:\33 Склад\Товарные чеки\{sklad_rashod.nom_rash}.{format}";
+                        string filename = $@"D:\33 Склад\Товарные чеки\{Sklad_rashods.nom_rash}.{format}";
 
                         try
                         {
@@ -323,8 +320,8 @@ namespace Api.Controllers
                             }
                         }
 
-                        *//*var fileName = System.IO.Path.GetFileName($@"D:\33 Склад\Товарные чеки\{sklad_rashod.nom_rash}.{format}");
-                        var content = await System.IO.File.ReadAllBytesAsync($@"D:\33 Склад\Товарные чеки\{sklad_rashod.nom_rash}.{format}");
+                        *//*var fileName = System.IO.Path.GetFileName($@"D:\33 Склад\Товарные чеки\{Sklad_rashods.nom_rash}.{format}");
+                        var content = await System.IO.File.ReadAllBytesAsync($@"D:\33 Склад\Товарные чеки\{Sklad_rashods.nom_rash}.{format}");
                         new FileExtensionContentTypeProvider()
                             .TryGetContentType(fileName, out string contentType);*//*
                         return Ok(filename);
@@ -353,7 +350,7 @@ namespace Api.Controllers
         [HttpPost]
         public async Task<ActionResult<List<Sklad_rashod>>> GetSklad_rashodByFilter(RashodyQueryParams? queryParams)
         {
-            if (_context.sklad_rashod == null)
+            if (_context.Sklad_rashods == null)
             {
                 return NotFound();
             }
@@ -365,7 +362,7 @@ namespace Api.Controllers
                 {
                     case 1:
                         {
-                            _rashods = await _context.sklad_rashod.
+                            _rashods = await _context.Sklad_rashods.
                                 Where(p => (queryParams.StartDate.HasValue ? p.date_rash.Date >= queryParams.StartDate.Value.Date : true)
                                         && (queryParams.EndDate.HasValue ? p.date_rash.Date <= queryParams.EndDate.Value.Date : true))
                                 /*.Include(p => p.Sheta)*//*.Include(p => p.Spr_oplat_sklad)*//*.Include(p => p.Sklad_dostavki)*/.ToListAsync();
@@ -373,7 +370,7 @@ namespace Api.Controllers
                         }
                     case 2:
                         {
-                            _rashods = await _context.sklad_rashod.
+                            _rashods = await _context.Sklad_rashods.
                                 Where(p => (queryParams.StartDate.HasValue ? p.date_otgruzki >= queryParams.StartDate.Value : true)
                                         && (queryParams.EndDate.HasValue ? p.date_otgruzki <= queryParams.EndDate : true))
                                 /*.Include(p => p.Sheta).Include(p => p.Spr_oplat_sklad)*//*.Include(p => p.Sklad_dostavki)*/.ToListAsync();
@@ -389,87 +386,57 @@ namespace Api.Controllers
                         }
                 }
 
-                if (queryParams.SelectedOplachen != null) _rashods = _rashods.Where(p => p.is_tov_opl == queryParams.SelectedOplachen.Value).ToList();
+                if (queryParams.SelectedOplachen != null) _rashods = _rashods.Where(p => p.oplacheno == queryParams.SelectedOplachen.Value).ToList();
                 if (queryParams.SelectedOtgruzheno != null) _rashods = _rashods.Where(p => p.otgruzheno == queryParams.SelectedOtgruzheno.Value).ToList();
-                if (queryParams.SelectedTipOpl != null) _rashods = _rashods.Where(p => p.oplata == queryParams.SelectedTipOpl.kod_zap).ToList();
-                if (queryParams.SelectedManager != null) _rashods = _rashods.Where(p => p.id_polz == queryParams.SelectedManager.Id).ToList();
+                if (queryParams.SelectedTipOpl != null) _rashods = _rashods.Where(p => p.type_oplatyID == queryParams.SelectedTipOpl.ID).ToList();
+                if (queryParams.SelectedManager != null) _rashods = _rashods.Where(p => p.userID == queryParams.SelectedManager.ID).ToList();
 
                 if (queryParams.Search != null && queryParams.Search != "")
                 {
-                    _rashods = _rashods.Where(p => p.nom_rash.ToString() == queryParams.Search || p.shet.GetValueOrDefault().ToString() == queryParams.Search
-                                            || (p.first_phone != null ? p.first_phone.Contains(queryParams.Search) : false)
-                                            || (p.name_kontact_person != null ? p.name_kontact_person.Contains(queryParams.Search) : false)
-                                            || (p.name_pokup != null ? p.name_pokup.Contains(queryParams.Search) : false)
-                                            //|| (p.otpustil != null ? p.otpustil.Contains(queryParams.Search) : false)
-                                            //|| (p.phone_pokup != null ? p.phone_pokup.Contains(queryParams.Search) : false)
-                                            || (p.prim != null ? p.prim.Contains(queryParams.Search) : false)
-                                            //|| (p.primZavSklad != null ? p.primZavSklad.Contains(queryParams.Search) : false)
-                                            || (p.prim_buh != null ? p.prim_buh.Contains(queryParams.Search) : false)
-                                            || (p.second_phone != null ? p.second_phone.Contains(queryParams.Search) : false)).ToList();
+                    _rashods = _rashods.Where(p => p.nom_rash.ToString() == queryParams.Search || p.shetID.GetValueOrDefault().ToString() == queryParams.Search
+                                            || (p.phone_customer != null ? p.phone_customer.Contains(queryParams.Search) : false)
+                                            || (p.name_customer != null ? p.name_customer.Contains(queryParams.Search) : false)
+                                            || (p.Polz != null ? p.Polz.surname.Contains(queryParams.Search) : false)
+                                            || (p.prim != null ? p.prim.Contains(queryParams.Search) : false)).ToList();
                 }
             }
-            else _rashods = await _context.sklad_rashod.ToListAsync();
-            _context.users.Load();
-            _context.sklad_rashod_tov.Load();
+            else _rashods = await _context.Sklad_rashods.ToListAsync();
+            _context.Users.Load();
+            _context.Sklad_rashod_prods.Load();
+            _context.Shets.Load();
             return _rashods;
         }     
 
         // PUT: api/Sklad_rashod/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutSklad_rashod(int id, Sklad_rashod sklad_rashod)
+        public async Task<IActionResult> PutSklad_rashod(int id, Sklad_rashod Sklad_rashods)
         {
-            if (id != sklad_rashod.kod_zap)
+            if (id != Sklad_rashods.ID)
             {
                 return BadRequest();
             }
 
-            _context.Entry(sklad_rashod).State = EntityState.Modified;
-            if (sklad_rashod.otgruzheno && sklad_rashod.date_otgruzki == null) sklad_rashod.date_otgruzki = DateTime.Now;
-            else if (!sklad_rashod.otgruzheno) sklad_rashod.date_otgruzki = null;
-            /*if (sklad_rashod.oplata == 2 || sklad_rashod.oplata == 20003)
+            _context.Entry(Sklad_rashods).State = EntityState.Modified;
+            if (Sklad_rashods.otgruzheno && Sklad_rashods.date_otgruzki == null) Sklad_rashods.date_otgruzki = DateTime.Now;
+            else if (!Sklad_rashods.otgruzheno) Sklad_rashods.date_otgruzki = null;
+            /*if (Sklad_rashods.Sklad_dostavki != null)
             {
-                sklad_rashod.summa = 0;
-                sklad_rashod.summa_beznal = sklad_rashod.SummaAll;
-                sklad_rashod.summa_karta = 0;
-                sklad_rashod.dolg = 0;
-            }
-            else
-            {
-                sklad_rashod.summa_beznal = 0;
-                if(sklad_rashod.oplata == 20002)
+                if(Sklad_rashods.Sklad_dostavki.Count != 0)
                 {
-                    sklad_rashod.dolg = sklad_rashod.SummaAll - sklad_rashod.summa - sklad_rashod.summa_karta;
-                }
-                else
-                {
-                    if (sklad_rashod.oplata == 3)
+                    foreach (var dost in Sklad_rashods.Sklad_dostavki)
                     {
-                        sklad_rashod.summa_karta = sklad_rashod.SummaAll - sklad_rashod.summa - sklad_rashod.dolg;
-                    }
-                    else
-                    {
-                        sklad_rashod.summa = sklad_rashod.SummaAll - sklad_rashod.summa_karta - sklad_rashod.dolg;
+                        _context.Entry(dost).State = EntityState.Modified;
+                        dost.data_rash = Sklad_rashods.date_rash;
                     }
                 }
             }*/
-            if (sklad_rashod.Sklad_dostavki != null)
-            {
-                if(sklad_rashod.Sklad_dostavki.Count != 0)
-                {
-                    foreach (var dost in sklad_rashod.Sklad_dostavki)
-                    {
-                        _context.Entry(dost).State = EntityState.Modified;
-                        dost.data_rash = sklad_rashod.date_rash;
-                    }
-                }
-            }
 
-            if (sklad_rashod.Sklad_rashod_tov != null)
+            if (Sklad_rashods.Sklad_rashod_tov != null)
             {
-                foreach (var tov in sklad_rashod.Sklad_rashod_tov)
+                foreach (var tov in Sklad_rashods.Sklad_rashod_tov)
                 {
-                    if (tov.kod_zap == 0) _context.Entry(tov).State = EntityState.Added;
+                    if (tov.ID == 0) _context.Entry(tov).State = EntityState.Added;
                     else _context.Entry(tov).State = EntityState.Modified;
                 }
             }
@@ -496,24 +463,25 @@ namespace Api.Controllers
         // POST: api/Sklad_rashod
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Sklad_rashod>> PostSklad_rashod(Sklad_rashod sklad_rashod)
+        public async Task<ActionResult<Sklad_rashod>> PostSklad_rashod(Sklad_rashod Sklad_rashods)
         {
-            if (_context.sklad_rashod == null)
+            if (_context.Sklad_rashods == null)
             {
                 return Problem("Entity set 'ApiContext.Sklad_rashod'  is null.");
             }
-            sklad_rashod.date_rash = DateTime.Now;
-            sklad_rashod.date_sozdania = DateTime.Now;
-            sklad_rashod.nom_rash = _context.sklad_rashod.Where(p => p.date_sozdania.Value.Year == DateTime.Now.Year).Max(p => p.nom_rash) + 1;
-            //sklad_rashod.otpustil = Environment.UserName;
-            _context.sklad_rashod.Add(sklad_rashod);
+            Sklad_rashods.date_rash = DateTime.Now;
+            Sklad_rashods.date_sozdania = DateTime.Now;
+            Sklad_rashods.nom_rash = _context.Sklad_rashods.Where(p => p.date_sozdania.Year == DateTime.Now.Year).Count() > 0 
+                ? _context.Sklad_rashods.Where(p => p.date_sozdania.Year == DateTime.Now.Year).Max(p => p.nom_rash) + 1 : 1;
+            Sklad_rashods.userID = Convert.ToInt16(HttpContext.User.FindFirst("ID").Value);
+            _context.Sklad_rashods.Add(Sklad_rashods);
             try
             {
                 await _context.SaveChangesAsync();
             }
             catch (DbUpdateException)
             {
-                if (Sklad_rashodExists(sklad_rashod.kod_zap))
+                if (Sklad_rashodExists(Sklad_rashods.ID))
                 {
                     return Conflict();
                 }
@@ -523,18 +491,18 @@ namespace Api.Controllers
                 }
             }
 
-            return CreatedAtAction("GetSklad_rashod", new { id = sklad_rashod.kod_zap }, sklad_rashod);
+            return CreatedAtAction("GetSklad_rashod", new { id = Sklad_rashods.ID }, Sklad_rashods);
         }
         [Route("Tov")]
         [HttpPost]
-        public async Task<ActionResult<Sklad_rashod>> PostSklad_rashod_tov(Sklad_rashod_tov Sklad_rashod_tov)
+        public async Task<ActionResult<Sklad_rashod>> PostSklad_rashod_tov(Sklad_rashod_prods Sklad_rashod_tov)
         {
-            if (_context.sklad_rashod_tov == null)
+            if (_context.Sklad_rashod_prods == null)
             {
                 return Problem("Entity set 'ApiContext.Sklad_rashod'  is null.");
             }
            
-            _context.sklad_rashod_tov.Add(Sklad_rashod_tov);
+            _context.Sklad_rashod_prods.Add(Sklad_rashod_tov);
             try
             {
                 await _context.SaveChangesAsync();
@@ -544,24 +512,24 @@ namespace Api.Controllers
                 throw;
             }
 
-            return CreatedAtAction("GetSklad_rashod", new { id = Sklad_rashod_tov.kod_zap }, Sklad_rashod_tov);
+            return CreatedAtAction("GetSklad_rashod", new { id = Sklad_rashod_tov.ID }, Sklad_rashod_tov);
         }
 
         [Route("Tov")]
         [HttpDelete]
         public async Task<IActionResult> DeleteSklad_rashod_tov(int id)
         {
-            if (_context.sklad_rashod == null)
+            if (_context.Sklad_rashods == null)
             {
                 return NotFound();
             }
-            var sklad_rashod_tov = await _context.sklad_rashod_tov.FindAsync(id);
-            if (sklad_rashod_tov == null)
+            var Sklad_rashod_prods = await _context.Sklad_rashod_prods.FindAsync(id);
+            if (Sklad_rashod_prods == null)
             {
                 return NotFound();
             }
 
-            _context.sklad_rashod_tov.Remove(sklad_rashod_tov);
+            _context.Sklad_rashod_prods.Remove(Sklad_rashod_prods);
             await _context.SaveChangesAsync();
 
             return NoContent();
@@ -570,17 +538,17 @@ namespace Api.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteSklad_rashod(int id)
         {
-            if (_context.sklad_rashod == null)
+            if (_context.Sklad_rashods == null)
             {
                 return NotFound();
             }
-            var sklad_rashod = await _context.sklad_rashod.FindAsync(id);
-            if (sklad_rashod == null)
+            var Sklad_rashods = await _context.Sklad_rashods.FindAsync(id);
+            if (Sklad_rashods == null)
             {
                 return NotFound();
             }
 
-            _context.sklad_rashod.Remove(sklad_rashod);
+            _context.Sklad_rashods.Remove(Sklad_rashods);
             await _context.SaveChangesAsync();
 
             return NoContent();
@@ -588,7 +556,7 @@ namespace Api.Controllers
 
         private bool Sklad_rashodExists(int id)
         {
-            return (_context.sklad_rashod?.Any(e => e.kod_zap == id)).GetValueOrDefault();
+            return (_context.Sklad_rashods?.Any(e => e.ID == id)).GetValueOrDefault();
         }
     }
 }

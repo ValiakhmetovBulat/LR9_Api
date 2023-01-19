@@ -6,13 +6,12 @@ namespace Api.Models
     public class Category
     {
         [Key]
-        public int kod_zap { get; set; }
+        public int ID { get; set; }
         public string? name { get; set; }
         public string? short_name { get; set; }
-        //public string? color { get; set; }
-        public Nullable<int> parent_kod_zap { get; set; }
+        public int? parentID { get; set; }
 
-        [ForeignKey("parent_kod_zap")]
+        [ForeignKey("parentID")]
         public Category? Parent { get; set; }
     }
 }
