@@ -24,5 +24,15 @@ namespace Api.Models
         public DbSet<Sklad_prihod_prods> Sklad_prihod_prods { get; set; }
         public DbSet<Manufacture> Manufactures { get; set; }
         public DbSet<Contractor> Contractors { get; set; }
+        public DbSet<Product_stock> Product_Stock { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Product_stock>((pc =>
+            {
+                pc.HasNoKey();
+                pc.ToView("Product_stock_view");
+            }));
+        }
     }
 }

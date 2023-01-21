@@ -21,7 +21,7 @@ builder.Services.AddEndpointsApiExplorer();
 // получаем строку подключения из файла конфигурации
 string connection = builder.Configuration.GetConnectionString("PostgresConnection");
 // добавляем контекст ApplicationContext в качестве сервиса в приложение
-builder.Services.AddDbContext<ApiContext>(options => options.UseNpgsql(connection));
+builder.Services.AddDbContext<ApiContext>(options => options.UseNpgsql(connection).UseSnakeCaseNamingConvention());
 AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 
 builder.Services.AddSwaggerGen(swagger =>
