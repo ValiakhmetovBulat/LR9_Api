@@ -31,7 +31,7 @@ namespace Api.Models
             modelBuilder.Entity<Product_stock>((pc =>
             {
                 pc.HasNoKey();
-                pc.ToView("Product_stock_view");
+                pc.ToView("product_stock_view");
             }));
         }
     }

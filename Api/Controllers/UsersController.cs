@@ -64,7 +64,7 @@ namespace Api.Controllers
             if (user != null)
             {
                 if (user.password != password) return Unauthorized();
-                var claims = new List<Claim> { new Claim(ClaimTypes.Name, username), new Claim("ID", user.ID.ToString()), new Claim(ClaimsIdentity.DefaultRoleClaimType, user.role) }; 
+                var claims = new List<Claim> { new Claim(ClaimTypes.Name, username), new Claim("Id", user.ID.ToString()), new Claim(ClaimsIdentity.DefaultRoleClaimType, user.role) }; 
                 // создаем JWT-токен
                 var jwt = new JwtSecurityToken(
                         issuer: AuthOptions.ISSUER,

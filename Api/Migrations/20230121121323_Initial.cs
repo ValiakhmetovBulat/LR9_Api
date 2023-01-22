@@ -13,93 +13,93 @@ namespace Api.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "Categories",
+                name: "categories",
                 columns: table => new
                 {
-                    ID = table.Column<int>(type: "integer", nullable: false)
+                    id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     name = table.Column<string>(type: "text", nullable: true),
                     shortname = table.Column<string>(name: "short_name", type: "text", nullable: true),
-                    parentID = table.Column<int>(type: "integer", nullable: true)
+                    parentid = table.Column<int>(name: "parent_id", type: "integer", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Categories", x => x.ID);
+                    table.PrimaryKey("pk_categories", x => x.id);
                     table.ForeignKey(
-                        name: "FK_Categories_Categories_parentID",
-                        column: x => x.parentID,
-                        principalTable: "Categories",
-                        principalColumn: "ID");
+                        name: "fk_categories_categories_parent_id",
+                        column: x => x.parentid,
+                        principalTable: "categories",
+                        principalColumn: "id");
                 });
 
             migrationBuilder.CreateTable(
-                name: "Contractors",
+                name: "contractors",
                 columns: table => new
                 {
-                    ID = table.Column<int>(type: "integer", nullable: false)
+                    id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     name = table.Column<string>(type: "text", nullable: false),
                     shortname = table.Column<string>(name: "short_name", type: "text", nullable: false),
-                    INN = table.Column<string>(type: "text", nullable: false),
-                    KPP = table.Column<string>(type: "text", nullable: false),
-                    OGRN = table.Column<string>(type: "text", nullable: false),
+                    inn = table.Column<string>(type: "text", nullable: false),
+                    kpp = table.Column<string>(type: "text", nullable: false),
+                    ogrn = table.Column<string>(type: "text", nullable: false),
                     uradres = table.Column<string>(name: "ur_adres", type: "text", nullable: false),
                     rukovod = table.Column<string>(type: "text", nullable: false),
                     phone = table.Column<string>(type: "text", nullable: true),
                     email = table.Column<string>(type: "text", nullable: false),
                     rashetshet = table.Column<string>(name: "rashet_shet", type: "text", nullable: false),
                     korrshet = table.Column<string>(name: "korr_shet", type: "text", nullable: false),
-                    BIK = table.Column<string>(type: "text", nullable: false)
+                    bik = table.Column<string>(type: "text", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Contractors", x => x.ID);
+                    table.PrimaryKey("pk_contractors", x => x.id);
                 });
 
             migrationBuilder.CreateTable(
-                name: "Karta",
+                name: "karta",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "integer", nullable: false)
+                    id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     name = table.Column<string>(type: "text", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Karta", x => x.Id);
+                    table.PrimaryKey("pk_karta", x => x.id);
                 });
 
             migrationBuilder.CreateTable(
-                name: "Manufactures",
+                name: "manufactures",
                 columns: table => new
                 {
-                    ID = table.Column<int>(type: "integer", nullable: false)
+                    id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     name = table.Column<string>(type: "text", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Manufactures", x => x.ID);
+                    table.PrimaryKey("pk_manufactures", x => x.id);
                 });
 
             migrationBuilder.CreateTable(
-                name: "Types_oplaty",
+                name: "types_oplaty",
                 columns: table => new
                 {
-                    ID = table.Column<int>(type: "integer", nullable: false)
+                    id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     naim = table.Column<string>(type: "text", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Types_oplaty", x => x.ID);
+                    table.PrimaryKey("pk_types_oplaty", x => x.id);
                 });
 
             migrationBuilder.CreateTable(
-                name: "Users",
+                name: "users",
                 columns: table => new
                 {
-                    ID = table.Column<int>(type: "integer", nullable: false)
+                    id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     surname = table.Column<string>(type: "text", nullable: false),
                     name = table.Column<string>(type: "text", nullable: false),
@@ -110,14 +110,14 @@ namespace Api.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Users", x => x.ID);
+                    table.PrimaryKey("pk_users", x => x.id);
                 });
 
             migrationBuilder.CreateTable(
-                name: "Products",
+                name: "products",
                 columns: table => new
                 {
-                    ID = table.Column<int>(type: "integer", nullable: false)
+                    id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     naim = table.Column<string>(type: "text", nullable: false),
                     dlina = table.Column<double>(type: "double precision", nullable: false),
@@ -128,32 +128,32 @@ namespace Api.Migrations
                     dekor = table.Column<string>(type: "text", nullable: true),
                     zvet = table.Column<string>(type: "text", nullable: true),
                     material = table.Column<string>(type: "text", nullable: true),
-                    manufID = table.Column<int>(type: "integer", nullable: false),
+                    manufid = table.Column<int>(name: "manuf_id", type: "integer", nullable: true),
                     veslista = table.Column<double>(name: "ves_lista", type: "double precision", nullable: false),
                     kollistvpachke = table.Column<int>(name: "kol_list_v_pachke", type: "integer", nullable: false),
-                    categoryID = table.Column<int>(type: "integer", nullable: false)
+                    categoryid = table.Column<int>(name: "category_id", type: "integer", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Products", x => x.ID);
+                    table.PrimaryKey("pk_products", x => x.id);
                     table.ForeignKey(
-                        name: "FK_Products_Categories_categoryID",
-                        column: x => x.categoryID,
-                        principalTable: "Categories",
-                        principalColumn: "ID",
+                        name: "fk_products_categories_category_id",
+                        column: x => x.categoryid,
+                        principalTable: "categories",
+                        principalColumn: "id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "Shets",
+                name: "shets",
                 columns: table => new
                 {
-                    ID = table.Column<int>(type: "integer", nullable: false)
+                    id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     nomshet = table.Column<int>(name: "nom_shet", type: "integer", nullable: false),
                     datesheta = table.Column<DateTime>(name: "date_sheta", type: "timestamp without time zone", nullable: false),
-                    contractorID = table.Column<int>(type: "integer", nullable: true),
-                    userID = table.Column<int>(type: "integer", nullable: false),
+                    contractorid = table.Column<int>(name: "contractor_id", type: "integer", nullable: true),
+                    userid = table.Column<int>(name: "user_id", type: "integer", nullable: false),
                     prim = table.Column<string>(type: "text", nullable: true),
                     iskorr = table.Column<bool>(name: "is_korr", type: "boolean", nullable: false),
                     oplachen = table.Column<bool>(type: "boolean", nullable: false),
@@ -161,31 +161,31 @@ namespace Api.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Shets", x => x.ID);
+                    table.PrimaryKey("pk_shets", x => x.id);
                     table.ForeignKey(
-                        name: "FK_Shets_Contractors_contractorID",
-                        column: x => x.contractorID,
-                        principalTable: "Contractors",
-                        principalColumn: "ID");
+                        name: "fk_shets_contractors_contractor_id",
+                        column: x => x.contractorid,
+                        principalTable: "contractors",
+                        principalColumn: "id");
                     table.ForeignKey(
-                        name: "FK_Shets_Users_userID",
-                        column: x => x.userID,
-                        principalTable: "Users",
-                        principalColumn: "ID",
+                        name: "fk_shets_users_user_id",
+                        column: x => x.userid,
+                        principalTable: "users",
+                        principalColumn: "id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "Sklad_prihods",
+                name: "sklad_prihods",
                 columns: table => new
                 {
-                    ID = table.Column<int>(type: "integer", nullable: false)
+                    id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     nomprih = table.Column<int>(name: "nom_prih", type: "integer", nullable: false),
                     dateprih = table.Column<DateTime>(name: "date_prih", type: "timestamp without time zone", nullable: false),
-                    contractorID = table.Column<int>(type: "integer", nullable: true),
+                    contractorid = table.Column<int>(name: "contractor_id", type: "integer", nullable: true),
                     transportotpost = table.Column<bool>(name: "transport_ot_post", type: "boolean", nullable: true),
-                    userID = table.Column<int>(type: "integer", nullable: false),
+                    userid = table.Column<int>(name: "user_id", type: "integer", nullable: false),
                     iskorr = table.Column<bool>(name: "is_korr", type: "boolean", nullable: true),
                     isinsklad = table.Column<bool>(name: "is_in_sklad", type: "boolean", nullable: false),
                     delivcost = table.Column<double>(name: "deliv_cost", type: "double precision", nullable: true),
@@ -194,142 +194,142 @@ namespace Api.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Sklad_prihods", x => x.ID);
+                    table.PrimaryKey("pk_sklad_prihods", x => x.id);
                     table.ForeignKey(
-                        name: "FK_Sklad_prihods_Contractors_contractorID",
-                        column: x => x.contractorID,
-                        principalTable: "Contractors",
-                        principalColumn: "ID");
+                        name: "fk_sklad_prihods_contractors_contractor_id",
+                        column: x => x.contractorid,
+                        principalTable: "contractors",
+                        principalColumn: "id");
                     table.ForeignKey(
-                        name: "FK_Sklad_prihods_Users_userID",
-                        column: x => x.userID,
-                        principalTable: "Users",
-                        principalColumn: "ID",
+                        name: "fk_sklad_prihods_users_user_id",
+                        column: x => x.userid,
+                        principalTable: "users",
+                        principalColumn: "id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "Prices",
+                name: "prices",
                 columns: table => new
                 {
-                    ID = table.Column<int>(type: "integer", nullable: false)
+                    id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    productID = table.Column<int>(type: "integer", nullable: false),
+                    productid = table.Column<int>(name: "product_id", type: "integer", nullable: false),
                     pricenal = table.Column<double>(name: "price_nal", type: "double precision", nullable: false),
                     pricebeznal = table.Column<double>(name: "price_beznal", type: "double precision", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Prices", x => x.ID);
+                    table.PrimaryKey("pk_prices", x => x.id);
                     table.ForeignKey(
-                        name: "FK_Prices_Products_productID",
-                        column: x => x.productID,
-                        principalTable: "Products",
-                        principalColumn: "ID",
+                        name: "fk_prices_products_product_id",
+                        column: x => x.productid,
+                        principalTable: "products",
+                        principalColumn: "id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "Shet_prods",
+                name: "shet_prods",
                 columns: table => new
                 {
-                    ID = table.Column<int>(type: "integer", nullable: false)
+                    id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    shetID = table.Column<int>(type: "integer", nullable: false),
-                    productID = table.Column<int>(type: "integer", nullable: false),
+                    shetid = table.Column<int>(name: "shet_id", type: "integer", nullable: false),
+                    productid = table.Column<int>(name: "product_id", type: "integer", nullable: false),
                     count = table.Column<double>(type: "double precision", nullable: false),
                     price = table.Column<double>(type: "double precision", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Shet_prods", x => x.ID);
+                    table.PrimaryKey("pk_shet_prods", x => x.id);
                     table.ForeignKey(
-                        name: "FK_Shet_prods_Products_productID",
-                        column: x => x.productID,
-                        principalTable: "Products",
-                        principalColumn: "ID",
+                        name: "fk_shet_prods_products_product_id",
+                        column: x => x.productid,
+                        principalTable: "products",
+                        principalColumn: "id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Shet_prods_Shets_shetID",
-                        column: x => x.shetID,
-                        principalTable: "Shets",
-                        principalColumn: "ID",
+                        name: "fk_shet_prods_shets_shet_id",
+                        column: x => x.shetid,
+                        principalTable: "shets",
+                        principalColumn: "id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "Sklad_rashods",
+                name: "sklad_rashods",
                 columns: table => new
                 {
-                    ID = table.Column<int>(type: "integer", nullable: false)
+                    id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     nomrash = table.Column<int>(name: "nom_rash", type: "integer", nullable: false),
                     daterash = table.Column<DateTime>(name: "date_rash", type: "timestamp without time zone", nullable: false),
                     dateotgruzki = table.Column<DateTime>(name: "date_otgruzki", type: "timestamp without time zone", nullable: true),
                     datesozdania = table.Column<DateTime>(name: "date_sozdania", type: "timestamp without time zone", nullable: false),
-                    userID = table.Column<int>(type: "integer", nullable: false),
+                    userid = table.Column<int>(name: "user_id", type: "integer", nullable: false),
                     prim = table.Column<string>(type: "text", nullable: true),
-                    shetID = table.Column<int>(type: "integer", nullable: true),
+                    shetid = table.Column<int>(name: "shet_id", type: "integer", nullable: true),
                     otgruzheno = table.Column<bool>(type: "boolean", nullable: false),
                     oplacheno = table.Column<bool>(type: "boolean", nullable: false),
                     phonecustomer = table.Column<string>(name: "phone_customer", type: "text", nullable: true),
                     namecustomer = table.Column<string>(name: "name_customer", type: "text", nullable: true),
-                    typeoplatyID = table.Column<int>(name: "type_oplatyID", type: "integer", nullable: false),
+                    typeoplatyid = table.Column<int>(name: "type_oplaty_id", type: "integer", nullable: false),
                     dateoplaty = table.Column<DateTime>(name: "date_oplaty", type: "timestamp without time zone", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Sklad_rashods", x => x.ID);
+                    table.PrimaryKey("pk_sklad_rashods", x => x.id);
                     table.ForeignKey(
-                        name: "FK_Sklad_rashods_Shets_shetID",
-                        column: x => x.shetID,
-                        principalTable: "Shets",
-                        principalColumn: "ID");
+                        name: "fk_sklad_rashods_shets_shet_id",
+                        column: x => x.shetid,
+                        principalTable: "shets",
+                        principalColumn: "id");
                     table.ForeignKey(
-                        name: "FK_Sklad_rashods_Types_oplaty_type_oplatyID",
-                        column: x => x.typeoplatyID,
-                        principalTable: "Types_oplaty",
-                        principalColumn: "ID",
+                        name: "fk_sklad_rashods_types_oplaty_type_oplaty_id",
+                        column: x => x.typeoplatyid,
+                        principalTable: "types_oplaty",
+                        principalColumn: "id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Sklad_rashods_Users_userID",
-                        column: x => x.userID,
-                        principalTable: "Users",
-                        principalColumn: "ID",
+                        name: "fk_sklad_rashods_users_user_id",
+                        column: x => x.userid,
+                        principalTable: "users",
+                        principalColumn: "id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "Sklad_prihod_prods",
+                name: "sklad_prihod_prods",
                 columns: table => new
                 {
-                    ID = table.Column<int>(type: "integer", nullable: false)
+                    id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    prihodID = table.Column<int>(type: "integer", nullable: false),
-                    productID = table.Column<int>(type: "integer", nullable: false),
+                    prihodid = table.Column<int>(name: "prihod_id", type: "integer", nullable: false),
+                    productid = table.Column<int>(name: "product_id", type: "integer", nullable: false),
                     count = table.Column<int>(type: "integer", nullable: false),
                     price = table.Column<double>(type: "double precision", nullable: false),
                     pricewithdeliv = table.Column<double>(name: "price_with_deliv", type: "double precision", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Sklad_prihod_prods", x => x.ID);
+                    table.PrimaryKey("pk_sklad_prihod_prods", x => x.id);
                     table.ForeignKey(
-                        name: "FK_Sklad_prihod_prods_Products_productID",
-                        column: x => x.productID,
-                        principalTable: "Products",
-                        principalColumn: "ID",
+                        name: "fk_sklad_prihod_prods_products_product_id",
+                        column: x => x.productid,
+                        principalTable: "products",
+                        principalColumn: "id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Sklad_prihod_prods_Sklad_prihods_prihodID",
-                        column: x => x.prihodID,
-                        principalTable: "Sklad_prihods",
-                        principalColumn: "ID",
+                        name: "fk_sklad_prihod_prods_sklad_prihods_prihod_id",
+                        column: x => x.prihodid,
+                        principalTable: "sklad_prihods",
+                        principalColumn: "id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "Sklad_dostavki",
+                name: "sklad_dostavki",
                 columns: table => new
                 {
                     id = table.Column<int>(type: "integer", nullable: false)
@@ -354,207 +354,207 @@ namespace Api.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Sklad_dostavki", x => x.id);
+                    table.PrimaryKey("pk_sklad_dostavki", x => x.id);
                     table.ForeignKey(
-                        name: "FK_Sklad_dostavki_Karta_karta_id",
+                        name: "fk_sklad_dostavki_karta_karta_id",
                         column: x => x.kartaid,
-                        principalTable: "Karta",
-                        principalColumn: "Id");
+                        principalTable: "karta",
+                        principalColumn: "id");
                     table.ForeignKey(
-                        name: "FK_Sklad_dostavki_Shets_shet",
+                        name: "fk_sklad_dostavki_shets_shet",
                         column: x => x.shet,
-                        principalTable: "Shets",
-                        principalColumn: "ID");
+                        principalTable: "shets",
+                        principalColumn: "id");
                     table.ForeignKey(
-                        name: "FK_Sklad_dostavki_Sklad_rashods_sklad_rashod_id",
+                        name: "fk_sklad_dostavki_sklad_rashods_sklad_rashod_id",
                         column: x => x.skladrashodid,
-                        principalTable: "Sklad_rashods",
-                        principalColumn: "ID",
+                        principalTable: "sklad_rashods",
+                        principalColumn: "id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Sklad_dostavki_Types_oplaty_tip_opl_id",
+                        name: "fk_sklad_dostavki_types_oplaty_tip_opl_id",
                         column: x => x.tipoplid,
-                        principalTable: "Types_oplaty",
-                        principalColumn: "ID",
+                        principalTable: "types_oplaty",
+                        principalColumn: "id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "Sklad_rashod_prods",
+                name: "sklad_rashod_prods",
                 columns: table => new
                 {
-                    ID = table.Column<int>(type: "integer", nullable: false)
+                    id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    rashodID = table.Column<int>(type: "integer", nullable: false),
-                    productID = table.Column<int>(type: "integer", nullable: false),
+                    rashodid = table.Column<int>(name: "rashod_id", type: "integer", nullable: false),
+                    productid = table.Column<int>(name: "product_id", type: "integer", nullable: false),
                     count = table.Column<int>(type: "integer", nullable: false),
                     price = table.Column<double>(type: "double precision", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Sklad_rashod_prods", x => x.ID);
+                    table.PrimaryKey("pk_sklad_rashod_prods", x => x.id);
                     table.ForeignKey(
-                        name: "FK_Sklad_rashod_prods_Products_productID",
-                        column: x => x.productID,
-                        principalTable: "Products",
-                        principalColumn: "ID",
+                        name: "fk_sklad_rashod_prods_products_product_id",
+                        column: x => x.productid,
+                        principalTable: "products",
+                        principalColumn: "id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Sklad_rashod_prods_Sklad_rashods_rashodID",
-                        column: x => x.rashodID,
-                        principalTable: "Sklad_rashods",
-                        principalColumn: "ID",
+                        name: "fk_sklad_rashod_prods_sklad_rashods_rashod_id",
+                        column: x => x.rashodid,
+                        principalTable: "sklad_rashods",
+                        principalColumn: "id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Categories_parentID",
-                table: "Categories",
-                column: "parentID");
+                name: "ix_categories_parent_id",
+                table: "categories",
+                column: "parent_id");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Prices_productID",
-                table: "Prices",
-                column: "productID");
+                name: "ix_prices_product_id",
+                table: "prices",
+                column: "product_id");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Products_categoryID",
-                table: "Products",
-                column: "categoryID");
+                name: "ix_products_category_id",
+                table: "products",
+                column: "category_id");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Shet_prods_productID",
-                table: "Shet_prods",
-                column: "productID");
+                name: "ix_shet_prods_product_id",
+                table: "shet_prods",
+                column: "product_id");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Shet_prods_shetID",
-                table: "Shet_prods",
-                column: "shetID");
+                name: "ix_shet_prods_shet_id",
+                table: "shet_prods",
+                column: "shet_id");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Shets_contractorID",
-                table: "Shets",
-                column: "contractorID");
+                name: "ix_shets_contractor_id",
+                table: "shets",
+                column: "contractor_id");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Shets_userID",
-                table: "Shets",
-                column: "userID");
+                name: "ix_shets_user_id",
+                table: "shets",
+                column: "user_id");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Sklad_dostavki_karta_id",
-                table: "Sklad_dostavki",
+                name: "ix_sklad_dostavki_karta_id",
+                table: "sklad_dostavki",
                 column: "karta_id");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Sklad_dostavki_shet",
-                table: "Sklad_dostavki",
+                name: "ix_sklad_dostavki_shet",
+                table: "sklad_dostavki",
                 column: "shet");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Sklad_dostavki_sklad_rashod_id",
-                table: "Sklad_dostavki",
+                name: "ix_sklad_dostavki_sklad_rashod_id",
+                table: "sklad_dostavki",
                 column: "sklad_rashod_id");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Sklad_dostavki_tip_opl_id",
-                table: "Sklad_dostavki",
+                name: "ix_sklad_dostavki_tip_opl_id",
+                table: "sklad_dostavki",
                 column: "tip_opl_id");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Sklad_prihod_prods_prihodID",
-                table: "Sklad_prihod_prods",
-                column: "prihodID");
+                name: "ix_sklad_prihod_prods_prihod_id",
+                table: "sklad_prihod_prods",
+                column: "prihod_id");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Sklad_prihod_prods_productID",
-                table: "Sklad_prihod_prods",
-                column: "productID");
+                name: "ix_sklad_prihod_prods_product_id",
+                table: "sklad_prihod_prods",
+                column: "product_id");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Sklad_prihods_contractorID",
-                table: "Sklad_prihods",
-                column: "contractorID");
+                name: "ix_sklad_prihods_contractor_id",
+                table: "sklad_prihods",
+                column: "contractor_id");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Sklad_prihods_userID",
-                table: "Sklad_prihods",
-                column: "userID");
+                name: "ix_sklad_prihods_user_id",
+                table: "sklad_prihods",
+                column: "user_id");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Sklad_rashod_prods_productID",
-                table: "Sklad_rashod_prods",
-                column: "productID");
+                name: "ix_sklad_rashod_prods_product_id",
+                table: "sklad_rashod_prods",
+                column: "product_id");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Sklad_rashod_prods_rashodID",
-                table: "Sklad_rashod_prods",
-                column: "rashodID");
+                name: "ix_sklad_rashod_prods_rashod_id",
+                table: "sklad_rashod_prods",
+                column: "rashod_id");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Sklad_rashods_shetID",
-                table: "Sklad_rashods",
-                column: "shetID");
+                name: "ix_sklad_rashods_shet_id",
+                table: "sklad_rashods",
+                column: "shet_id");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Sklad_rashods_type_oplatyID",
-                table: "Sklad_rashods",
-                column: "type_oplatyID");
+                name: "ix_sklad_rashods_type_oplaty_id",
+                table: "sklad_rashods",
+                column: "type_oplaty_id");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Sklad_rashods_userID",
-                table: "Sklad_rashods",
-                column: "userID");
+                name: "ix_sklad_rashods_user_id",
+                table: "sklad_rashods",
+                column: "user_id");
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Manufactures");
+                name: "manufactures");
 
             migrationBuilder.DropTable(
-                name: "Prices");
+                name: "prices");
 
             migrationBuilder.DropTable(
-                name: "Shet_prods");
+                name: "shet_prods");
 
             migrationBuilder.DropTable(
-                name: "Sklad_dostavki");
+                name: "sklad_dostavki");
 
             migrationBuilder.DropTable(
-                name: "Sklad_prihod_prods");
+                name: "sklad_prihod_prods");
 
             migrationBuilder.DropTable(
-                name: "Sklad_rashod_prods");
+                name: "sklad_rashod_prods");
 
             migrationBuilder.DropTable(
-                name: "Karta");
+                name: "karta");
 
             migrationBuilder.DropTable(
-                name: "Sklad_prihods");
+                name: "sklad_prihods");
 
             migrationBuilder.DropTable(
-                name: "Products");
+                name: "products");
 
             migrationBuilder.DropTable(
-                name: "Sklad_rashods");
+                name: "sklad_rashods");
 
             migrationBuilder.DropTable(
-                name: "Categories");
+                name: "categories");
 
             migrationBuilder.DropTable(
-                name: "Shets");
+                name: "shets");
 
             migrationBuilder.DropTable(
-                name: "Types_oplaty");
+                name: "types_oplaty");
 
             migrationBuilder.DropTable(
-                name: "Contractors");
+                name: "contractors");
 
             migrationBuilder.DropTable(
-                name: "Users");
+                name: "users");
         }
     }
 }

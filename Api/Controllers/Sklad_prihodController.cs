@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Api.Models;
 using Api.Models.Sklad;
+using System.Security.Claims;
 
 namespace Api.Controllers
 {
@@ -116,7 +117,7 @@ namespace Api.Controllers
             Sklad_prihods.dop_rash = 0;
             Sklad_prihods.deliv_cost = 0;
 
-            Sklad_prihods.userID = Convert.ToInt16(HttpContext.User.FindFirst("ID").Value);
+            Sklad_prihods.userID = Convert.ToInt32(HttpContext.User.FindFirstValue("Id"));
 
             _context.Sklad_prihods.Add(Sklad_prihods);
             await _context.SaveChangesAsync();

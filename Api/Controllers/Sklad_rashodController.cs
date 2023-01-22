@@ -473,7 +473,8 @@ namespace Api.Controllers
             Sklad_rashods.date_sozdania = DateTime.Now;
             Sklad_rashods.nom_rash = _context.Sklad_rashods.Where(p => p.date_sozdania.Year == DateTime.Now.Year).Count() > 0 
                 ? _context.Sklad_rashods.Where(p => p.date_sozdania.Year == DateTime.Now.Year).Max(p => p.nom_rash) + 1 : 1;
-            Sklad_rashods.userID = Convert.ToInt16(HttpContext.User.FindFirst("ID").Value);
+            Sklad_rashods.userID = Convert.ToInt16(HttpContext.User.FindFirst("Id").Value);
+            if (Sklad_rashods.type_oplatyID == 0) Sklad_rashods.type_oplatyID = 1;
             _context.Sklad_rashods.Add(Sklad_rashods);
             try
             {
