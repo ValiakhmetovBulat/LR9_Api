@@ -25,6 +25,10 @@ namespace Api.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Shet>>> Getsheta()
         {
+            _context.Users.Load();
+            _context.Contractors.Load();
+            _context.Shet_prods.Include(p => p.Tovar).Load();
+            _context.Manufactures.Load();
             return await _context.Shets.ToListAsync();
         }
 
@@ -39,6 +43,9 @@ namespace Api.Controllers
                 return NotFound();
             }
 
+            _context.Manufactures.Load();
+            _context.Users.Where(p=>p.ID == sheta.userID).Load();
+            _context.Contractors.Where(p=>p.ID == sheta.contractorID).Load();
             return sheta;
         }
 
@@ -90,7 +97,9 @@ namespace Api.Controllers
             }
             else _sheta = await _context.Shets.ToListAsync();
             _context.Users.Load();
-            _context.Shet_prods.Load();
+            _context.Contractors.Load();
+            _context.Manufactures.Load();
+            _context.Shet_prods.Include(p => p.Tovar).Load();
             return _sheta;
         }
 

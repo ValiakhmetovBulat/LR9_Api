@@ -38,6 +38,11 @@ namespace Api.Controllers
                 return NotFound();
             }
 
+            _context.Users.Load();
+            _context.Contractors.Load();
+            _context.Manufactures.Load();
+            _context.Types_oplaty.Load();
+            _context.Shet_prods.Include(p => p.Tovar).Load();
             _context.Sklad_rashod_prods.Where(p => p.rashodID == id).Include(p => p.Tovar).Load();
             _context.Shets.Where(p => p.ID == Sklad_rashods.shetID).Load();
             return Sklad_rashods;
@@ -394,8 +399,6 @@ namespace Api.Controllers
                 if (queryParams.Search != null && queryParams.Search != "")
                 {
                     _rashods = _rashods.Where(p => p.nom_rash.ToString() == queryParams.Search || p.shetID.GetValueOrDefault().ToString() == queryParams.Search
-                                            || (p.phone_customer != null ? p.phone_customer.Contains(queryParams.Search) : false)
-                                            || (p.name_customer != null ? p.name_customer.Contains(queryParams.Search) : false)
                                             || (p.Polz != null ? p.Polz.surname.Contains(queryParams.Search) : false)
                                             || (p.prim != null ? p.prim.Contains(queryParams.Search) : false)).ToList();
                 }
@@ -404,6 +407,10 @@ namespace Api.Controllers
             _context.Users.Load();
             _context.Sklad_rashod_prods.Load();
             _context.Shets.Load();
+            _context.Types_oplaty.Load();
+            _context.Contractors.Load();
+            _context.Manufactures.Load();
+            _context.Shet_prods.Include(p => p.Tovar).Load();
             return _rashods;
         }     
 

@@ -26,6 +26,10 @@ namespace Api.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Sklad_prihod>>> GetSklad_prihod()
         {
+            _context.Users.Load();
+            _context.Contractors.Load();
+            _context.Products.Load();
+            _context.Manufactures.Load();
             return await _context.Sklad_prihods.Include(p=>p.Sklad_prihod_tov).ToListAsync();
         }
 
@@ -33,14 +37,17 @@ namespace Api.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<Sklad_prihod>> GetSklad_prihod(int id)
         {
-            var Sklad_prihods = await _context.Sklad_prihods.FindAsync(id);
+            var sklad_prihod = await _context.Sklad_prihods.FindAsync(id);
 
-            if (Sklad_prihods == null)
+            if (sklad_prihod == null)
             {
                 return NotFound();
             }
             _context.Sklad_prihod_prods.Where(p => p.prihodID == id).Include(p => p.Tovar).Load();
-            return Sklad_prihods;
+            _context.Users.Where(p => p.ID == sklad_prihod.userID).Load();
+            _context.Contractors.Where(p => p.ID == sklad_prihod.contractorID).Load();
+            _context.Manufactures.Load();
+            return sklad_prihod;
         }
 
         [Route("Filter")]
@@ -52,6 +59,10 @@ namespace Api.Controllers
                 return NotFound();
             }
 
+            _context.Users.Load();
+            _context.Contractors.Load();
+            _context.Sklad_prihod_prods.Include(p => p.Tovar).Load();
+            _context.Manufactures.Load();
             List<Sklad_prihod> _prihods = new List<Sklad_prihod>();
             if (queryParams != null)
             {
@@ -61,31 +72,35 @@ namespace Api.Controllers
 
                 if (queryParams.Search != null && queryParams.Search != "")
                 {
+                    var s = _prihods.Select(p=>p.Sklad_prihod_tov.Select(p => p.Tovar.naim));
                     _prihods = _prihods.Where(p => p.nom_prih.ToString() == queryParams.Search
-                                            || (p.prim != null ? p.prim.Contains(queryParams.Search) : false)).ToList();
+                                            || (p.prim != null ? p.prim.Contains(queryParams.Search) : false)
+                                            || p.Sklad_prihod_tov.Select(p=>p.Tovar.naim).Contains(queryParams.Search)).ToList();
                 }
             }
             else _prihods = await _context.Sklad_prihods.Include(p=>p.Polz).ToListAsync();
-            _context.Sklad_prihod_prods.Include(p => p.Tovar).Load();
             return _prihods;
         }
 
         // PUT: api/Sklad_prihod/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutSklad_prihod(int id, Sklad_prihod Sklad_prihods)
+        public async Task<IActionResult> PutSklad_prihod(int id, Sklad_prihod sklad_prihod)
         {
-            if (id != Sklad_prihods.ID)
+            if (id != sklad_prihod.ID)
             {
                 return BadRequest();
             }
 
-            _context.Entry(Sklad_prihods).State = EntityState.Modified;
-            foreach (Sklad_prihod_prods tov in Sklad_prihods.Sklad_prihod_tov)
+            _context.Entry(sklad_prihod).State = EntityState.Modified;
+            foreach (Sklad_prihod_prods tov in sklad_prihod.Sklad_prihod_tov)
             {
                 if (tov.ID == null || tov.ID == 0) _context.Entry(tov).State = EntityState.Added;
                 else _context.Entry(tov).State = EntityState.Modified;
             }
+
+            if (sklad_prihod.transport_ot_post.HasValue && sklad_prihod.transport_ot_post.Value) sklad_prihod.deliv_cost = 0;
+            sklad_prihod.UpdateZenaDost();
             try
             {
                 await _context.SaveChangesAsync();

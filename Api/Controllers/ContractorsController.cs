@@ -11,58 +11,56 @@ namespace Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class TovaryController : ControllerBase
+    public class ContractorsController : ControllerBase
     {
         private readonly ApiContext _context;
 
-        public TovaryController(ApiContext context)
+        public ContractorsController(ApiContext context)
         {
             _context = context;
         }
 
-        // GET: api/Tovary
+        // GET: api/Contractors
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Product>>> GetTovary()
+        public async Task<ActionResult<IEnumerable<Contractor>>> GetContractors()
         {
-            _context.Manufactures.Load();
-            return await _context.Products.ToListAsync();
+            return await _context.Contractors.ToListAsync();
         }
 
-        // GET: api/Tovary/5
+        // GET: api/Contractors/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Product>> GetTovary(int id)
+        public async Task<ActionResult<Contractor>> GetContractor(int id)
         {
-            var Products = await _context.Products.FindAsync(id);
+            var contractor = await _context.Contractors.FindAsync(id);
 
-            if (Products == null)
+            if (contractor == null)
             {
                 return NotFound();
             }
 
-            _context.Manufactures.Load();
-            return Products;
+            return contractor;
         }
 
-        // PUT: api/Tovary/5
+        // PUT: api/Contractors/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutTovary(int id, Product Products)
+        public async Task<IActionResult> PutContractor(int id, Contractor contractor)
         {
-            if (id != Products.ID)
+            if (id != contractor.ID)
             {
                 return BadRequest();
             }
 
-            if (Products.ID == 0) _context.Entry(Products).State = EntityState.Added;
-            else _context.Entry(Products).State = EntityState.Modified;
-            
+            if (contractor.ID == 0) _context.Entry(contractor).State = EntityState.Added;
+            else _context.Entry(contractor).State = EntityState.Modified;
+
             try
             {
                 await _context.SaveChangesAsync();
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!TovaryExists(id))
+                if (!ContractorExists(id))
                 {
                     return NotFound();
                 }
@@ -75,36 +73,36 @@ namespace Api.Controllers
             return NoContent();
         }
 
-        // POST: api/Tovary
+        // POST: api/Contractors
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Product>> PostTovary(Product Products)
+        public async Task<ActionResult<Contractor>> PostContractor(Contractor contractor)
         {
-            _context.Products.Add(Products);
+            _context.Contractors.Add(contractor);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetTovary", new { id = Products.ID }, Products);
+            return CreatedAtAction("GetContractor", new { id = contractor.ID }, contractor);
         }
 
-        // DELETE: api/Tovary/5
+        // DELETE: api/Contractors/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteTovary(int id)
+        public async Task<IActionResult> DeleteContractor(int id)
         {
-            var Products = await _context.Products.FindAsync(id);
-            if (Products == null)
+            var contractor = await _context.Contractors.FindAsync(id);
+            if (contractor == null)
             {
                 return NotFound();
             }
 
-            _context.Products.Remove(Products);
+            _context.Contractors.Remove(contractor);
             await _context.SaveChangesAsync();
 
             return NoContent();
         }
 
-        private bool TovaryExists(int id)
+        private bool ContractorExists(int id)
         {
-            return _context.Products.Any(e => e.ID == id);
+            return _context.Contractors.Any(e => e.ID == id);
         }
     }
 }

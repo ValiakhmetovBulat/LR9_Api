@@ -26,5 +26,20 @@ namespace Api.Models.Sklad
         public virtual User? Polz { get; set; }
         [ForeignKey("contractorID")]
         public virtual Contractor? Contractor { get; set; }
+
+        public void UpdateZenaDost()
+        {
+            double dost = (deliv_cost != null ? deliv_cost.Value : 0) + (dop_rash != null ? dop_rash.Value : 0);
+            double countTotal = Sklad_prihod_tov.Sum(p => p.count);
+            double dost_1 = 0;
+            if (countTotal > 0)
+            {
+                dost_1 = dost / countTotal;
+            }
+            foreach (Sklad_prihod_prods tov in Sklad_prihod_tov)
+            {
+                if(is_korr.HasValue && !is_korr.Value || !is_korr.HasValue) tov.price_with_deliv = tov.price + dost_1;
+            }
+        }
     }
 }

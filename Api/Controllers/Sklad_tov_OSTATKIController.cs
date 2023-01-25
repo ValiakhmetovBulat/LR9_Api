@@ -27,7 +27,9 @@ namespace Api.Controllers
         {
             List<Product_stock> product_Stocks = _context.Product_Stock.ToList();
             _context.Products.Load();
-            foreach(var product_stock in product_Stocks)
+            _context.Contractors.Load();
+            _context.Manufactures.Load();
+            foreach (var product_stock in product_Stocks)
             {
                 product_stock.Tovar = _context.Products.Find(product_stock.productID);
             }
@@ -36,9 +38,9 @@ namespace Api.Controllers
 
         // GET: api/Sklad_tov_OSTATKI/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<decimal>> GetSklad_tov_OSTATKI(int id)
+        public async Task<ActionResult<int>> GetSklad_tov_OSTATKI(int id)
         {
-            var sklad_tov_OSTATKI = await _context.Product_Stock.FindAsync(id);
+            var sklad_tov_OSTATKI = await _context.Product_Stock.Where(p=>p.productID == id).FirstOrDefaultAsync();
 
             if (sklad_tov_OSTATKI == null)
             {
@@ -54,6 +56,8 @@ namespace Api.Controllers
         {
             _context.Categories.Where(p => p.ID == id).Load();
             _context.Products.Where(p=>p.categoryID == id).Load();
+            _context.Contractors.Load();
+            _context.Manufactures.Load();
             var product_Stocks = await _context.Product_Stock.Where(p => p.Tovar != null && p.Tovar.categoryID == id).ToListAsync();
 
             if (product_Stocks == null)

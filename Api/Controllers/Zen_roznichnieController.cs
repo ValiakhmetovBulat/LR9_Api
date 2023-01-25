@@ -25,7 +25,8 @@ namespace Api.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Price>>> GetZen_roznichnie()
         {
-
+            _context.Contractors.Load();
+            _context.Manufactures.Load();
             return await _context.Prices.Include(p=>p.Tovar).ToListAsync();
         }
 
@@ -36,6 +37,8 @@ namespace Api.Controllers
             var zen_roznichnie = _context.Prices.Where(p => p.productID == id).FirstOrDefault();
             if (zen_roznichnie == null) return NotFound();
 
+            _context.Contractors.Load();
+            _context.Manufactures.Load();
             return zen_roznichnie;
         }
 
@@ -63,7 +66,8 @@ namespace Api.Controllers
                 return BadRequest();
             }
 
-            _context.Entry(zen_roznichnie).State = EntityState.Modified;
+            if (zen_roznichnie.ID == 0) _context.Entry(zen_roznichnie).State = EntityState.Added;
+            else _context.Entry(zen_roznichnie).State = EntityState.Modified;
 
             try
             {

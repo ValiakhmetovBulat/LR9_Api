@@ -39,18 +39,18 @@ namespace Api.Controllers
 
         [Authorize]
         // GET: api/Users/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<User>> GetUser(int id)
+        [HttpGet("{login}")]
+        public async Task<ActionResult<User>> GetUser(string login)
         {
             if (_context.Users == null)
             {
                 return NotFound();
             }
-            var user = await _context.Users.FindAsync(id);
+            var user = await _context.Users.Where(p=>p.login == login).FirstOrDefaultAsync();
 
             if (user == null)
             {
-                return NotFound();
+                return NotFound("Пользователя нет");
             }
 
             return user;
@@ -76,6 +76,20 @@ namespace Api.Controllers
                 return new JwtSecurityTokenHandler().WriteToken(jwt);
             }
             return NotFound();
+        }
+
+        [Route("CheckToken")]
+        [HttpGet]
+        public async Task<ActionResult<string>> CheckToken()
+        {
+            if (HttpContext.User.Identity.IsAuthenticated)
+            {
+                return Ok("Успешно");
+            }
+            else
+            {
+                return NotFound();
+            }
         }
 
         [Authorize]

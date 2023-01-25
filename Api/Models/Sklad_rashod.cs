@@ -17,8 +17,7 @@ namespace Api.Models
         public int? shetID { get; set; }
         public bool otgruzheno { get; set; }
         public bool oplacheno { get; set; }
-        public string? phone_customer { get; set; }
-        public string? name_customer { get; set; }
+        public int? customerID { get; set; }
         public int type_oplatyID { get; set; }
         public DateTime? date_oplaty { get; set; }
 
@@ -27,14 +26,17 @@ namespace Api.Models
             get { return Sklad_rashod_tov != null ? Sklad_rashod_tov.Sum(p => Math.Ceiling(p.Summa)) : 0; }
         }
         public virtual ICollection<Sklad_rashod_prods>? Sklad_rashod_tov { get; set; }
-        public virtual ICollection<Sklad_dostavki>? Sklad_dostavki { get; set; }
 
         [ForeignKey("shetID")]
         public virtual Shet? Shet { get; set; }
 
         [ForeignKey("type_oplatyID")]
-        public virtual Type_oplaty? Spr_oplat_sklad { get; set; }
+        public virtual Type_oplaty? Type_oplaty { get; set; }
+
         [ForeignKey("userID")]
         public virtual User? Polz { get; set; }
+
+        [ForeignKey("customerID")]
+        public virtual User? Customer { get; set; }
     }
 }
