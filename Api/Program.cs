@@ -93,7 +93,7 @@ app.UseStaticFiles();
 
 app.UseAuthentication();
 app.UseAuthorization();
-
+/*
 app.Map("/", (HttpContext context) =>
 {
     var user = context.User.Identity;
@@ -107,7 +107,16 @@ app.Map("/", (HttpContext context) =>
     }
 });
 //app.Map("/admin", [Authorize(Roles = "Admin")] () => "Admin Panel");
-app.Map("/hello", [Authorize]() => "Hello World!");
+app.Map("/hello", [Authorize]() => "Hello World!");*/
+/*app.UseEndpoints(endpoints =>
+{
+    endpoints.MapControllerRoute(
+        name: "default",
+        pattern: "{controller=Home}/{action=Index}/{id?}");
+});*/
+app.MapControllerRoute(
+    name: "default",
+    pattern: "{controller=Home}/{action=Index}/{id?}");
 app.MapControllers();
 
 app.Run();

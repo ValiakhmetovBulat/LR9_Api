@@ -27,7 +27,8 @@ namespace Api.Controllers
         {
             _context.Contractors.Load();
             _context.Manufactures.Load();
-            return await _context.Prices.Include(p=>p.Tovar).ToListAsync();
+            var list = await _context.Prices.Include(p => p.Tovar).ToListAsync();
+            return list.OrderBy(p => p.Tovar.naim).ThenBy(p => p.Tovar.tol).ToList();
         }
 
         // GET: api/Zen_roznichnie/5

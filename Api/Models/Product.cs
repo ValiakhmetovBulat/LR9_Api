@@ -37,7 +37,7 @@ namespace Api.Models
         [ForeignKey("categoryID")]
         public Category? Category { get; set; }
         [ForeignKey("manufID")]
-        public Manufacture Manufact { get; set; }
+        public Manufacture? Manufact { get; set; }
 
     }
 }

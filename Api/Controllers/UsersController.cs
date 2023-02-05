@@ -27,13 +27,14 @@ namespace Api.Controllers
         [Authorize]
         // GET: api/Users
         [HttpGet]
-        public async Task<ActionResult<List<User>>> GetUsers()
+        public async Task<ActionResult<List<User>>> GetUsers(bool? isEmployee)
         {
             if (_context.Users == null)
             {
                 return NotFound();
             }
-            return await _context.Users.ToListAsync();
+            if(isEmployee.HasValue && isEmployee.Value) return await _context.Users.Where(p=>p.role != "client").ToListAsync();
+            else return await _context.Users.ToListAsync();
 
         }
 
@@ -80,11 +81,11 @@ namespace Api.Controllers
 
         [Route("CheckToken")]
         [HttpGet]
-        public async Task<ActionResult<string>> CheckToken()
+        public async Task<ActionResult<User>> CheckToken()
         {
             if (HttpContext.User.Identity.IsAuthenticated)
             {
-                return Ok("Успешно");
+                return _context.Users.Find(Convert.ToInt32(HttpContext.User.FindFirstValue("Id")));
             }
             else
             {
@@ -103,7 +104,8 @@ namespace Api.Controllers
                 return BadRequest();
             }
 
-            _context.Entry(user).State = EntityState.Modified;
+            if(user.ID == 0) _context.Entry(user).State = EntityState.Added;
+            else _context.Entry(user).State = EntityState.Modified;
 
             try
             {

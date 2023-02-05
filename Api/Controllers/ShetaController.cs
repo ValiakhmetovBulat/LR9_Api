@@ -23,13 +23,15 @@ namespace Api.Controllers
 
         // GET: api/Shets
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Shet>>> Getsheta()
+        public async Task<ActionResult<IEnumerable<Shet>>> Getsheta(int? nom_shet)
         {
             _context.Users.Load();
             _context.Contractors.Load();
             _context.Shet_prods.Include(p => p.Tovar).Load();
             _context.Manufactures.Load();
-            return await _context.Shets.ToListAsync();
+            var list = await _context.Shets.OrderBy(p=>p.nom_shet).ToListAsync();
+            if(nom_shet != null) list = list.Where(p=>p.nom_shet == nom_shet).ToList();
+            return list.OrderBy(p=>p.nom_shet).ToList();
         }
 
         // GET: api/Sheta/5
@@ -95,12 +97,12 @@ namespace Api.Controllers
                                             || (p.prim != null ? p.prim.Contains(queryParams.Search) : false)).ToList();
                 }
             }
-            else _sheta = await _context.Shets.ToListAsync();
+            else _sheta = await _context.Shets.OrderBy(p => p.nom_shet).ToListAsync();
             _context.Users.Load();
             _context.Contractors.Load();
             _context.Manufactures.Load();
             _context.Shet_prods.Include(p => p.Tovar).Load();
-            return _sheta;
+            return _sheta.OrderBy(p => p.nom_shet).ToList();
         }
 
         // PUT: api/Sheta/5

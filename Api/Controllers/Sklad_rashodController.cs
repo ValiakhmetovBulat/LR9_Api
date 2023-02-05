@@ -411,7 +411,7 @@ namespace Api.Controllers
             _context.Contractors.Load();
             _context.Manufactures.Load();
             _context.Shet_prods.Include(p => p.Tovar).Load();
-            return _rashods;
+            return _rashods.OrderBy(p=>p.nom_rash).ToList();
         }     
 
         // PUT: api/Sklad_rashod/5

@@ -24,7 +24,8 @@ namespace Api.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Contractor>>> GetContractors()
         {
-            return await _context.Contractors.ToListAsync();
+            var list = await _context.Contractors.OrderBy(p=>p.short_name).ToListAsync();
+            return await _context.Contractors.OrderBy(p => p.short_name).ToListAsync();
         }
 
         // GET: api/Contractors/5

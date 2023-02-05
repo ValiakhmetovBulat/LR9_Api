@@ -30,7 +30,7 @@ namespace Api.Controllers
             _context.Contractors.Load();
             _context.Products.Load();
             _context.Manufactures.Load();
-            return await _context.Sklad_prihods.Include(p=>p.Sklad_prihod_tov).ToListAsync();
+            return await _context.Sklad_prihods.Include(p=>p.Sklad_prihod_tov).OrderBy(p=>p.nom_prih).ToListAsync();
         }
 
         // GET: api/Sklad_prihod/5
@@ -79,7 +79,7 @@ namespace Api.Controllers
                 }
             }
             else _prihods = await _context.Sklad_prihods.Include(p=>p.Polz).ToListAsync();
-            return _prihods;
+            return _prihods.OrderBy(p => p.nom_prih).ToList();
         }
 
         // PUT: api/Sklad_prihod/5

@@ -25,7 +25,7 @@ namespace Api.Controllers
         public async Task<ActionResult<IEnumerable<Product>>> GetTovary()
         {
             _context.Manufactures.Load();
-            return await _context.Products.ToListAsync();
+            return await _context.Products.OrderBy(p=>p.naim).ThenBy(p=>p.nazn).ThenBy(p=>p.tol).ToListAsync();
         }
 
         // GET: api/Tovary/5
