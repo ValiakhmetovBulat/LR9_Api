@@ -50,10 +50,18 @@ namespace Api.Controllers
         {
             double? zena = -1;
             var zen_roznichnie = _context.Prices.Where(p => p.productID == id).FirstOrDefault();
-            if (zen_roznichnie == null) return NotFound();
-            if (tipOplaty == 2) zena = zen_roznichnie.price_beznal;
-            else zena = zen_roznichnie.price_nal;
-            if (zena == null) return BadRequest("Неверная цена");
+
+            if (zen_roznichnie == null) 
+                return NotFound();
+
+            if (tipOplaty == 2) 
+                zena = zen_roznichnie.price_beznal;
+            else 
+                zena = zen_roznichnie.price_nal;
+
+            if (zena == null) 
+                return BadRequest("Неверная цена");
+
             return zena.Value;
         }
 
