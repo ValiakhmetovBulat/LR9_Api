@@ -70,8 +70,7 @@ namespace Api.Controllers
                         {
                             _sheta = await _context.Shets.
                                 Where(p => (queryParams.StartDate.HasValue ? p.date_sheta.Date >= queryParams.StartDate.Value.Date : true)
-                                        && (queryParams.EndDate.HasValue ? p.date_sheta.Date <= queryParams.EndDate.Value.Date : true))
-                                /*.Include(p => p.Sheta)*//*.Include(p => p.Spr_oplat_sklad)*//*.Include(p => p.Sklad_dostavki)*/.ToListAsync();
+                                        && (queryParams.EndDate.HasValue ? p.date_sheta.Date <= queryParams.EndDate.Value.Date : true)).ToListAsync();
                             break;
                         }
                     case 2:
@@ -82,8 +81,7 @@ namespace Api.Controllers
                         {
                             _sheta = await _context.Shets.
                                 Where(p => (queryParams.StartDate.HasValue && p.date_oplaty.HasValue ? p.date_oplaty.Value.Date >= queryParams.StartDate.Value.Date : true)
-                                        && (queryParams.EndDate.HasValue && p.date_oplaty.HasValue ? p.date_oplaty.Value.Date <= queryParams.EndDate.Value.Date : true))
-                                /*.Include(p => p.Sheta)*//*.Include(p => p.Spr_oplat_sklad)*//*.Include(p => p.Sklad_dostavki)*/.ToListAsync();
+                                        && (queryParams.EndDate.HasValue && p.date_oplaty.HasValue ? p.date_oplaty.Value.Date <= queryParams.EndDate.Value.Date : true)).ToListAsync();
                             break;
                         }
                 }
