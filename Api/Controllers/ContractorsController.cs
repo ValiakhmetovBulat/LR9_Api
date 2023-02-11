@@ -22,11 +22,7 @@ namespace Api.Controllers
 
         // GET: api/Contractors
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Contractor>>> GetContractors()
-        {
-            var list = await _context.Contractors.OrderBy(p=>p.short_name).ToListAsync();
-            return await _context.Contractors.OrderBy(p => p.short_name).ToListAsync();
-        }
+        public async Task<ActionResult<IEnumerable<Contractor>>> GetContractors() => await _context.Contractors.OrderBy(p => p.short_name).ToListAsync();
 
         // GET: api/Contractors/5
         [HttpGet("{id}")]
