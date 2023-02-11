@@ -97,9 +97,6 @@ namespace Api.Controllers
             return NoContent();
         }
 
-        private bool ContractorExists(int id)
-        {
-            return _context.Contractors.Any(e => e.ID == id);
-        }
+        private bool ContractorExists(int id) => _context.Contractors.Any(e => e.ID == id);
     }
 }
