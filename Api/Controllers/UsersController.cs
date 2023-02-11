@@ -33,8 +33,11 @@ namespace Api.Controllers
             {
                 return NotFound();
             }
-            if(isEmployee.HasValue && isEmployee.Value) return await _context.Users.Where(p=>p.role != "client").ToListAsync();
-            else return await _context.Users.ToListAsync();
+
+            if(isEmployee.HasValue && isEmployee.Value) 
+                return await _context.Users.Where(p=>p.role != "client").ToListAsync();
+            else 
+                return await _context.Users.ToListAsync();
 
         }
 
