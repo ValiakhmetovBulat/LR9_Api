@@ -22,10 +22,7 @@ namespace Api.Controllers
 
         // GET: api/Categories
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Category>>> GetCategories()
-        {
-            return await _context.Categories.ToListAsync();
-        }
+        public async Task<ActionResult<IEnumerable<Category>>> GetCategories() => await _context.Categories.ToListAsync();
 
         // GET: api/Categories/5
         [HttpGet("{id}")]
