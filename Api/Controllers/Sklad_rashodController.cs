@@ -427,17 +427,6 @@ namespace Api.Controllers
             _context.Entry(Sklad_rashods).State = EntityState.Modified;
             if (Sklad_rashods.otgruzheno && Sklad_rashods.date_otgruzki == null) Sklad_rashods.date_otgruzki = DateTime.Now;
             else if (!Sklad_rashods.otgruzheno) Sklad_rashods.date_otgruzki = null;
-            /*if (Sklad_rashods.Sklad_dostavki != null)
-            {
-                if(Sklad_rashods.Sklad_dostavki.Count != 0)
-                {
-                    foreach (var dost in Sklad_rashods.Sklad_dostavki)
-                    {
-                        _context.Entry(dost).State = EntityState.Modified;
-                        dost.data_rash = Sklad_rashods.date_rash;
-                    }
-                }
-            }*/
 
             if (Sklad_rashods.Sklad_rashod_tov != null)
             {
